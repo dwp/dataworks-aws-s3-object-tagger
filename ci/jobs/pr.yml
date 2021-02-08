@@ -1,29 +1,29 @@
 jobs:
-  - name: dataworks-repo-template-terraform-pr
+  - name: dataworks-aws-s3-object-tagger-pr
     plan:
-      - get: dataworks-repo-template-terraform-pr
+      - get: dataworks-aws-s3-object-tagger-pr
         trigger: true
         version: every
-      - put: dataworks-repo-template-terraform-pr
+      - put: dataworks-aws-s3-object-tagger-pr
         params:
-          path: dataworks-repo-template-terraform-pr
+          path: dataworks-aws-s3-object-tagger-pr
           status: pending
       - .: (( inject meta.plan.terraform-bootstrap ))
         input_mapping:
-          dataworks-repo-template-terraform: dataworks-repo-template-terraform-pr
+          dataworks-aws-s3-object-tagger: dataworks-aws-s3-object-tagger-pr
       - .: (( inject meta.plan.terraform-plan ))
         input_mapping:
-          dataworks-repo-template-terraform: dataworks-repo-template-terraform-pr
+          dataworks-aws-s3-object-tagger: dataworks-aws-s3-object-tagger-pr
         params:
           TF_WORKSPACE: "qa"
           DETAILED_EXITCODE: ""
         on_failure:
-          put: dataworks-repo-template-terraform-pr
+          put: dataworks-aws-s3-object-tagger-pr
           params:
-            path: dataworks-repo-template-terraform-pr
+            path: dataworks-aws-s3-object-tagger-pr
             status: failure
         on_success:
-          put: dataworks-repo-template-terraform-pr
+          put: dataworks-aws-s3-object-tagger-pr
           params:
-            path: dataworks-repo-template-terraform-pr
+            path: dataworks-aws-s3-object-tagger-pr
             status: success

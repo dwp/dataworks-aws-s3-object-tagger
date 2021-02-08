@@ -5,4 +5,4 @@ groups:
       - qa
   - name: pull-request
     jobs:
-      - dataworks-repo-template-terraform-pr
+      - dataworks-aws-s3-object-tagger-pr

@@ -2,7 +2,7 @@ jobs:
   - name: qa
     max_in_flight: 1
     plan:
-      - get: dataworks-repo-template-terraform
+      - get: dataworks-aws-s3-object-tagger
         trigger: true
         passed:
           - development

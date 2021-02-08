@@ -1,6 +1,6 @@
-# dataworks-repo-template-terraform
+# dataworks-aws-s3-object-tagger
 
-## Description
+## S3 Object tagger application infrastructure
 
 This repo contains Makefile and base terraform folders and jinja2 files to fit the standard pattern.
 This repo is a base to create new Terraform repos, renaming the template files and adding the githooks submodule, making the repo ready for use.
