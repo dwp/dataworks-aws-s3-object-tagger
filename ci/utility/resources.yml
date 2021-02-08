@@ -7,8 +7,6 @@ resources:
       uri: https://github.com/dwp/dataworks-s3-object-tagger.git
     check_every: 720h
     webhook_token: ((dataworks.concourse_github_webhook_token))
-  - name: meta
-    type: meta
   - name: aws-common-infrastructure
     type: git
     source:
@@ -29,3 +27,13 @@ resources:
         - data/data_classification.csv
     webhook_token: ((dataworks.concourse_github_webhook_token))
     check_every: 5m
+  - name: meta-development
+    type: meta
+  - name: meta-qa
+    type: meta
+  - name: meta-integration
+    type: meta
+  - name: meta-preprod
+    type: meta
+  - name: meta-production
+    type: meta

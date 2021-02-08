@@ -24,11 +24,11 @@ jobs:
       - get: rbac-csv
         trigger: true
         passed:
-          - rbac-csv-upload-qa
+          - rbac-csv-upload-integration
       - get: dataworks-s3-object-tagger
         trigger: true
       - put: meta
-        resource: meta
+        resource: meta-preprod
       - get: aws-common-infrastructure
       - .: (( inject meta.plan.terraform-output ))
         config:

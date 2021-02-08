@@ -29,18 +29,27 @@ resource "aws_iam_role" "pdm_object_tagger" {
 
 data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
   statement {
-    sid    = "AllowS3Tagging"
+    sid    = "AllowS3GetObject"
     effect = "Allow"
 
     actions = [
-      "s3:ListBucket",
       "s3:GetObject",
-      "s3:GetObjectTagging",
-      "s3:PutObjectTagging"
     ]
 
     resources = [
       "${data.terraform_remote_state.common.outputs.config_bucket.arn}/*",
+    ]
+  }
+
+  statement {
+    sid    = "AllowS3ListObjects"
+    effect = "Allow"
+
+    actions = [
+      "s3:ListBucket",
+    ]
+
+    resources = [
       "${data.terraform_remote_state.common.outputs.config_bucket.arn}",
     ]
   }

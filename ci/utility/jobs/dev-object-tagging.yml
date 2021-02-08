@@ -23,7 +23,7 @@ jobs:
       - get: dataworks-s3-object-tagger
         trigger: true
       - put: meta
-        resource: meta
+        resource: meta-development
       - get: aws-common-infrastructure
       - .: (( inject meta.plan.terraform-output ))
       - .: (( inject meta.plan.object-tagging-batch ))
