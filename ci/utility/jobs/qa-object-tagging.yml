@@ -1,0 +1,44 @@
+jobs:
+  - name: rbac-csv-upload-qa
+    max_in_flight: 1
+    serial: true
+    plan:
+      - get: rbac-csv
+        trigger: true
+        passed:
+        - rbac-csv-upload-dev
+      - get: aws-common-infrastructure
+      - .: (( inject meta.plan.terraform-output ))
+        config:
+          params:
+            TF_WORKSPACE: qa
+      - .: (( inject meta.plan.rbac-csv-upload ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.qa)):role/ci
+
+  - name: object-tagging-qa
+    max_in_flight: 1
+    serial: true
+    plan:
+      - get: rbac-csv
+        trigger: true
+        passed:
+          - rbac-csv-upload-dev
+      - get: dataworks-s3-object-tagger
+        trigger: true
+      - put: meta
+        resource: meta
+      - get: aws-common-infrastructure
+      - .: (( inject meta.plan.terraform-output ))
+        config:
+          params:
+            TF_WORKSPACE: qa
+      - .: (( inject meta.plan.object-tagging-batch ))
+        config:
+          params:
+            BATCH_JOB_DEFINITION: pdm_object_tagger_job
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.qa)):role/ci
+            S3_PREFIX: "data/uc"
+            CSV_PREFIX: "component/rbac"
+            FILE_NAME: "data_classification.csv"

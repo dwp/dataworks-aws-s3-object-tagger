@@ -1,0 +1,108 @@
+meta:
+  plan:
+    object-tagging-batch:
+      task: object-tagging-batch
+      attempts: 1
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: meta
+          - name: terraform-output-common
+        params:
+          AWS_DEFAULT_REGION: eu-west-2
+          TIMEOUT: 90   # Time (in minutes) to wait for job to complete
+          BATCH_JOB_DEFINITION: pdm_object_tagger_job
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              source /assume-role
+              pipeline_name=`cat "meta/build_pipeline_name"`
+              job_name=`cat "meta/build_job_name"`
+              build_number=$(cat "meta/build_name" | tr '.' '_')
+              CONFIG_BUCKET=$(cat terraform-output-common/outputs.json | jq -r '.config_bucket.value.id' )
+              CSV_LOCATION="s3://${CONFIG_BUCKET}/${CSV_PREFIX}/${FILE_NAME}"
+
+              job_id=$(aws batch submit-job --job-queue pdm_object_tagger --job-definition ${BATCH_JOB_DEFINITION} \
+                --job-name ${pipeline_name}_${job_name}_${build_number} \
+                --container-overrides "{\"command\": [\"--s3_prefix=${S3_PREFIX}\", \"--csv_location=${CSV_LOCATION}\"]}" \
+                | jq -e --raw-output .jobId)
+              i=0
+              set +x
+              while [[ ${i} -le ${TIMEOUT} ]]
+              do
+                status=$(aws batch describe-jobs --jobs ${job_id} | jq -e --raw-output '.jobs[0].status')
+                if [ "$status" == "FAILED" ]; then
+                  echo "job failed"
+                  exit 1
+                fi
+                if [ "$status" == "SUCCEEDED" ]; then
+                  echo "job succeeded"
+                  exit 0
+                fi
+                echo "job is currently ${status}"
+                i=$((i+1))
+                sleep 60
+              done
+              exit 1
+
+    terraform-output:
+      task: terraform-output
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.terraform_repository))
+            tag: ((dataworks.terraform_version))
+        params:
+          TF_CLI_ARGS_apply: -lock-timeout=300s
+          TF_CLI_ARGS_plan: -lock-timeout=300s
+          TF_INPUT: "false"
+          TF_VAR_slack_webhook_url: ((dataworks.slack_webhook_url))
+        inputs:
+          - name: aws-common-infrastructure
+        run:
+          path: sh
+          dir: aws-common-infrastructure
+          args:
+            - -exc
+            - |
+              terraform workspace show
+              terraform init
+              terraform output --json > ../terraform-output-common/outputs.json
+        outputs:
+          - name: terraform-output-common
+
+    rbac-csv-upload:
+      task: rbac-csv-upload
+      attempts: 1
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: rbac-csv
+          - name: terraform-output-common
+        params:
+          AWS_DEFAULT_REGION: eu-west-2
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              CONFIG_BUCKET=$(cat terraform-output-common/outputs.json | jq -r '.config_bucket.value.id' )
+              echo $CONFIG_BUCKET
+              source /assume-role
+              aws s3 cp rbac-csv/data/data_classification.csv s3://${CONFIG_BUCKET}/component/rbac/data_classification.csv

@@ -1,0 +1,13 @@
+groups:
+  - name: object-tagging
+    jobs:
+    - object-tagging-dev
+    - object-tagging-qa
+    - object-tagging-integration
+    - object-tagging-preprod
+    - object-tagging-production
+    - rbac-csv-upload-dev
+    - rbac-csv-upload-qa
+    - rbac-csv-upload-integration
+    - rbac-csv-upload-preprod
+    - rbac-csv-upload-production
