@@ -32,7 +32,7 @@ meta:
 
               job_id=$(aws batch submit-job --job-queue pdm_object_tagger --job-definition ${BATCH_JOB_DEFINITION} \
                 --job-name ${pipeline_name}_${job_name}_${build_number} \
-                --container-overrides "{\"command\": [\"--s3_prefix=${S3_PREFIX}\", \"--csv_location=${CSV_LOCATION}\"]}" \
+                --container-overrides "{\"command\": [\"--data_s3_prefix=${DATA_S3_PREFIX}\", \"--csv_location=${CSV_LOCATION}\"]}" \
                 | jq -e --raw-output .jobId)
               i=0
               set +x

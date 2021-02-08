@@ -39,6 +39,6 @@ jobs:
           params:
             BATCH_JOB_DEFINITION: pdm_object_tagger_job
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
-            S3_PREFIX: "data/uc"
+            DATA_S3_PREFIX: "data/uc"
             CSV_PREFIX: "component/rbac"
             FILE_NAME: "data_classification.csv"

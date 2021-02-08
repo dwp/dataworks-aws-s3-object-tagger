@@ -1,5 +1,6 @@
 locals {
   pdm_object_tagger_image = "${local.account.management}.${data.terraform_remote_state.aws_ingestion.outputs.vpc.vpc.ecr_dkr_domain_name}/dataworks-s3-object-tagger:${var.image_version.s3-object-tagger}"
+  pdm_object_tagger_application_name = "pdm-s3-object-tagger"
 }
 
 # AWS Batch Job IAM role
@@ -115,8 +116,9 @@ resource "aws_batch_job_definition" "pdm_object_tagger" {
       "environment": [
           {"name": "LOG_LEVEL", "value": "INFO"},
           {"name": "AWS_DEFAULT_REGION", "value": "eu-west-2"},
-          {"name": "BUCKET", "value": "${data.terraform_remote_state.common.outputs.published_bucket.id}"},
-          {"name": "ENVIRONMENT", "value": "${local.environment}"}
+          {"name": "DATA_BUCKET", "value": "${data.terraform_remote_state.common.outputs.published_bucket.id}"},
+          {"name": "ENVIRONMENT", "value": "${local.environment}"},
+          {"name": "APPLICATION", "value": "${local.pdm_object_tagger_application_name}"}
       ],
       "ulimits": [
         {
