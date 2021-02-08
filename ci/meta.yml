@@ -13,7 +13,6 @@ meta:
           TF_CLI_ARGS_apply: -lock-timeout=300s
           TF_CLI_ARGS_plan: -lock-timeout=300s
           TF_VAR_costcode: ((dataworks.costcode))
-          AWS_REGION: ((dataworks.aws_region))
     terraform-bootstrap:
       task: terraform-bootstrap
       config:
