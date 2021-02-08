@@ -9,7 +9,7 @@ spruce:
         regexp: ".*.yml"
     to: aviator_pipeline.yml
 fly:
-  name: dataworks-aws-s3-object-tagger
+  name: s3-object-tagger
   target: aws-concourse
   config: aviator_pipeline.yml
   expose: true
