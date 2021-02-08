@@ -41,6 +41,7 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
 
     resources = [
       "${data.terraform_remote_state.common.outputs.config_bucket.arn}/*",
+      "${data.terraform_remote_state.common.outputs.config_bucket.arn}",
     ]
   }
 
@@ -54,7 +55,7 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
     ]
 
     resources = [
-      "${data.terraform_remote_state.common.outputs.config_bucket_cmk.arn}/*",
+      "${data.terraform_remote_state.common.outputs.config_bucket_cmk.arn}",
     ]
   }
 }
@@ -65,7 +66,6 @@ data "aws_iam_policy_document" "pdm_object_tagger_published_bucket" {
     effect = "Allow"
 
     actions = [
-      "s3:ListBucket",
       "s3:GetObject",
       "s3:GetObjectTagging",
       "s3:PutObjectTagging"
@@ -73,6 +73,19 @@ data "aws_iam_policy_document" "pdm_object_tagger_published_bucket" {
 
     resources = [
       "${data.terraform_remote_state.common.outputs.published_bucket.arn}/*",
+    ]
+  }
+
+  statement {
+    sid    = "AllowS3ListObjects"
+    effect = "Allow"
+
+    actions = [
+      "s3:ListBucket"
+    ]
+
+    resources = [
+      data.terraform_remote_state.common.outputs.published_bucket.arn,
     ]
   }
 }
