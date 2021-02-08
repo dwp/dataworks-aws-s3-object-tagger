@@ -1,0 +1,29 @@
+jobs:
+  - name: dataworks-repo-template-terraform-pr
+    plan:
+      - get: dataworks-repo-template-terraform-pr
+        trigger: true
+        version: every
+      - put: dataworks-repo-template-terraform-pr
+        params:
+          path: dataworks-repo-template-terraform-pr
+          status: pending
+      - .: (( inject meta.plan.terraform-bootstrap ))
+        input_mapping:
+          dataworks-repo-template-terraform: dataworks-repo-template-terraform-pr
+      - .: (( inject meta.plan.terraform-plan ))
+        input_mapping:
+          dataworks-repo-template-terraform: dataworks-repo-template-terraform-pr
+        params:
+          TF_WORKSPACE: "qa"
+          DETAILED_EXITCODE: ""
+        on_failure:
+          put: dataworks-repo-template-terraform-pr
+          params:
+            path: dataworks-repo-template-terraform-pr
+            status: failure
+        on_success:
+          put: dataworks-repo-template-terraform-pr
+          params:
+            path: dataworks-repo-template-terraform-pr
+            status: success
