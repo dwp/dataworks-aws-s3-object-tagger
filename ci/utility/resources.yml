@@ -1,12 +1,4 @@
 resources:
-  - name: dataworks-s3-object-tagger
-    type: git
-    source:
-      branch: master
-      repository: dwp/dataworks-s3-object-tagger
-      uri: https://github.com/dwp/dataworks-s3-object-tagger.git
-    check_every: 720h
-    webhook_token: ((dataworks.concourse_github_webhook_token))
   - name: aws-common-infrastructure
     type: git
     source:
