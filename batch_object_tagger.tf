@@ -1,6 +1,7 @@
 locals {
   pdm_object_tagger_image = "${local.account.management}.${data.terraform_remote_state.aws_ingestion.outputs.vpc.vpc.ecr_dkr_domain_name}/dataworks-s3-object-tagger:${var.image_version.s3-object-tagger}"
   pdm_object_tagger_application_name = "pdm-s3-object-tagger"
+  config_prefix = "component/rbac"
 }
 
 # AWS Batch Job IAM role
@@ -37,7 +38,7 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
     ]
 
     resources = [
-      "${data.terraform_remote_state.common.outputs.config_bucket.arn}/*",
+      "${data.terraform_remote_state.common.outputs.config_bucket.arn}/${local.config_prefix}/*",
     ]
   }
 
@@ -50,7 +51,7 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
     ]
 
     resources = [
-      "${data.terraform_remote_state.common.outputs.config_bucket.arn}",
+      data.terraform_remote_state.common.outputs.config_bucket.arn,
     ]
   }
 
