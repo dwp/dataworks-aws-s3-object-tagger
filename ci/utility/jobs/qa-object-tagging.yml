@@ -5,8 +5,6 @@ jobs:
     plan:
       - get: rbac-csv
         trigger: true
-        passed:
-        - rbac-csv-upload-dev
       - get: aws-common-infrastructure
       - .: (( inject meta.plan.terraform-output ))
         config:
