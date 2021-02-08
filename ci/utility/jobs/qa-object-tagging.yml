@@ -23,8 +23,6 @@ jobs:
         trigger: true
         passed:
           - rbac-csv-upload-qa
-      - get: dataworks-s3-object-tagger
-        trigger: true
       - put: meta
         resource: meta-qa
       - get: aws-common-infrastructure

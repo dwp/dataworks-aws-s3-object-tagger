@@ -20,11 +20,10 @@ jobs:
         trigger: true
         passed:
           - rbac-csv-upload-dev
-      - get: dataworks-s3-object-tagger
-        trigger: true
       - put: meta
         resource: meta-development
       - get: aws-common-infrastructure
+        passed:
       - .: (( inject meta.plan.terraform-output ))
       - .: (( inject meta.plan.object-tagging-batch ))
         config:
