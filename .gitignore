@@ -7,3 +7,4 @@
 
 terraform.tf
 aviator_pipeline.yml
+aviator_pipeline_object_tagging.yml
