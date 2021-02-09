@@ -47,3 +47,15 @@ terraform-workspace-new: ## Creates new Terraform workspace with Concourse remot
 		fly -t aws-concourse execute --config create-workspace.yml --input repo=. -v workspace="$$i" ; \
 	done
 	rm jeff.tf
+
+.PHONY: concourse-login
+concourse-login: ## Login to concourse using Fly
+	fly -t aws-concourse login -c https://ci.dataworks.dwp.gov.uk/ -n dataworks
+
+.PHONY: utility-login
+utility-login: ## Login to utility team using Fly
+	fly -t utility login -c https://ci.dataworks.dwp.gov.uk/ -n utility
+
+.PHONY: update-object-tagging-pipeline
+update-object-tagging-pipeline: ## Update the update-object-tagging pipeline
+	aviator -f aviator_object_tagging.yml

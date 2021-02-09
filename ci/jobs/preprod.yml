@@ -1,13 +1,15 @@
 jobs:
-  - name: qa
+  - name: preprod
     max_in_flight: 1
     plan:
       - get: dataworks-aws-s3-object-tagger
         trigger: true
+        passed:
+          - qa
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-apply ))
         params:
-          TF_WORKSPACE: 'qa'
+          TF_WORKSPACE: 'preprod'
       - .: (( inject meta.plan.terraform-plan ))
         params:
-          TF_WORKSPACE: 'qa'
+          TF_WORKSPACE: 'preprod'

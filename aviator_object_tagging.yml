@@ -1,0 +1,16 @@
+spruce:
+  - base: ci/utility/meta.yml
+    prune:
+      - meta
+    merge:
+      - with_in: ci/utility/
+        regexp: ".*yml"
+      - with_in: ci/utility/jobs/
+        regexp: ".*yml"
+    to: aviator_pipeline_object_tagging.yml
+fly:
+  name: pdm-object-tagging
+  target: utility
+  expose: true
+  check_creds: true
+  config: aviator_pipeline_object_tagging.yml

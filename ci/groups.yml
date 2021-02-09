@@ -3,6 +3,9 @@ groups:
     jobs:
       - development
       - qa
+      - integration
+      - preprod
+      - production
   - name: pull-request
     jobs:
       - dataworks-aws-s3-object-tagger-pr
