@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
     ]
 
     resources = [
-      "${data.terraform_remote_state.common.outputs.config_bucket_cmk.arn}",
+      data.terraform_remote_state.common.outputs.config_bucket_cmk.arn,
     ]
   }
 }
