@@ -48,19 +48,6 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
   }
 
   statement {
-    sid    = "AllowS3ListObjects"
-    effect = "Allow"
-
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      data.terraform_remote_state.common.outputs.config_bucket.arn,
-    ]
-  }
-
-  statement {
     sid    = "AllowDecryptConfigBucketObjects"
     effect = "Allow"
 

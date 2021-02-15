@@ -114,6 +114,9 @@ meta:
           AWS_DEFAULT_REGION: eu-west-2
           TIMEOUT: 90   # Time (in minutes) to wait for job to complete
           BATCH_JOB_DEFINITION: pdm_object_tagger_job
+          DATA_S3_PREFIX: "pdm-dataset/hive/external/uc.db"
+          CSV_PREFIX: "component/rbac"
+          FILE_NAME: "data_classification.csv"
         run:
           path: sh
           args:
@@ -153,6 +156,34 @@ meta:
                 sleep 60
               done
               exit 1
+
+    terraform-output:
+      task: terraform-output
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.terraform_repository))
+            tag: ((dataworks.terraform_version))
+        params:
+          TF_CLI_ARGS_apply: -lock-timeout=300s
+          TF_CLI_ARGS_plan: -lock-timeout=300s
+          TF_INPUT: "false"
+          TF_VAR_slack_webhook_url: ((dataworks.slack_webhook_url))
+        inputs:
+          - name: aws-common-infrastructure
+        run:
+          path: sh
+          dir: aws-common-infrastructure
+          args:
+            - -exc
+            - |
+              terraform workspace show
+              terraform init
+              terraform output --json > ../terraform-output-common/outputs.json
+        outputs:
+          - name: terraform-output-common
 
     rbac-csv-upload:
       task: rbac-csv-upload
