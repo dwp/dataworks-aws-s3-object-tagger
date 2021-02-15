@@ -35,23 +35,11 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
 
     actions = [
       "s3:GetObject",
+      "s3:ListBucket"
     ]
 
     resources = [
       "${data.terraform_remote_state.common.outputs.config_bucket.arn}/${local.config_prefix}/*",
-    ]
-  }
-
-  statement {
-    sid    = "AllowS3ListObjects"
-    effect = "Allow"
-
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      data.terraform_remote_state.common.outputs.config_bucket.arn,
     ]
   }
 
