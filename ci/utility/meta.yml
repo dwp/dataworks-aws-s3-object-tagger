@@ -18,7 +18,7 @@ meta:
           AWS_DEFAULT_REGION: eu-west-2
           TIMEOUT: 90   # Time (in minutes) to wait for job to complete
           BATCH_JOB_DEFINITION: pdm_object_tagger_job
-          DATA_S3_PREFIX: "data/uc"
+          DATA_S3_PREFIX: "pdm-dataset/hive/external"
           CSV_PREFIX: "component/rbac"
           FILE_NAME: "data_classification.csv"
         run:
