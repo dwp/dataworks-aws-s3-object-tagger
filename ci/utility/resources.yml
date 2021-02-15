@@ -19,6 +19,14 @@ resources:
         - data/data_classification.csv
     webhook_token: ((dataworks.concourse_github_webhook_token))
     check_every: 5m
+  - name: dataworks-aws-s3-object-tagger
+    type: git
+    source:
+      branch: master
+      uri: https://github.com/dwp/dataworks-aws-s3-object-tagger.git
+      access_token: ((dataworks-secrets.concourse_github_pat))
+    webhook_token: ((dataworks.concourse_github_webhook_token))
+    check_every: 720h
   - name: meta-development
     type: meta
   - name: meta-qa
