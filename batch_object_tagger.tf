@@ -1,7 +1,11 @@
 locals {
+  // Be aware, changing these values will also update the corresponding 'pdm_success_start_object_tagger' Cloudwatch event
+  // in aws-pdm-dataset-generation repo.
   pdm_object_tagger_image            = "${local.account.management}.${data.terraform_remote_state.aws_ingestion.outputs.vpc.vpc.ecr_dkr_domain_name}/dataworks-s3-object-tagger:${var.image_version.s3-object-tagger}"
   pdm_object_tagger_application_name = "pdm-s3-object-tagger"
   config_prefix                      = "component/rbac"
+  config_filename                    = "data_classification.csv"
+  data_s3_prefix                     = "pdm-dataset/hive/external/uc.db"
 }
 
 # AWS Batch Job IAM role
