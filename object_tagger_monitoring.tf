@@ -11,7 +11,9 @@ resource "aws_cloudwatch_event_rule" "object_tagging_state_changes" {
     "aws.batch"
   ],
   "detail": {
-    "jobQueue": "${aws_batch_job_queue.pdm_object_tagger.arn}"
+    "jobQueue": [
+      "${aws_batch_job_queue.pdm_object_tagger.arn}"
+    ]
   }
 }
 EOF
