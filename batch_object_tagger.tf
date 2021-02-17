@@ -5,7 +5,7 @@ locals {
   pdm_object_tagger_application_name = "pdm-s3-object-tagger"
   config_prefix                      = "component/rbac"
   config_filename                    = "data_classification.csv"
-  data_s3_prefix                     = "data/uc"
+  data_s3_prefix                     = "data/uc/uc.db"
 }
 
 # AWS Batch Job IAM role

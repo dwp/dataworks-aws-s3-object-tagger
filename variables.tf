@@ -12,6 +12,6 @@ variable "region" {
 variable "image_version" {
   description = "Container tag values."
   default = {
-    s3-object-tagger = "0.0.6"
+    s3-object-tagger = "0.0.10"
   }
 }

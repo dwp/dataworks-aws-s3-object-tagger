@@ -112,11 +112,9 @@ meta:
           - name: terraform-output-aws-s3-object-tagger
         params:
           AWS_DEFAULT_REGION: eu-west-2
-          TIMEOUT: 90   # Time (in minutes) to wait for job to complete
+          TIMEOUT: 900   # Time (in minutes) to wait for job to complete
+          ASSUME_DURATION: 14400
           BATCH_JOB_DEFINITION: pdm_object_tagger_job
-          DATA_S3_PREFIX: "pdm-dataset/hive/external/uc.db"
-          CSV_PREFIX: "component/rbac"
-          FILE_NAME: "data_classification.csv"
         run:
           path: sh
           args:
