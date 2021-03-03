@@ -1,0 +1,34 @@
+jobs:
+  - name: rbac-csv-upload-dev
+    max_in_flight: 1
+    serial: true
+    plan:
+      - get: rbac-csv
+        trigger: true
+      - get: aws-common-infrastructure
+      - .: (( inject meta.plan.terraform-output-common ))
+      - .: (( inject meta.plan.rbac-csv-upload ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
+
+  - name: object-tagging-dev
+    max_in_flight: 1
+    serial: true
+    plan:
+      - get: rbac-csv
+        trigger: true
+        passed:
+          - rbac-csv-upload-dev
+      - put: meta
+        resource: meta-development
+      - get: aws-common-infrastructure
+      - get: dataworks-aws-s3-object-tagger
+      - .: (( inject meta.plan.terraform-bootstrap ))
+      - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
+      - .: (( inject meta.plan.terraform-output-common ))
+      - .: (( inject meta.plan.object-tagging-batch ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
+            SUBSYSTEM: "PDM"

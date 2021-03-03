@@ -6,6 +6,7 @@ locals {
   config_prefix                      = "component/rbac"
   config_filename                    = "data_classification.csv"
   data_s3_prefix                     = "data/uc/uc.db"
+  pt_s3_prefix                       = "data/uc_payment_timelines"
 }
 
 # AWS Batch Job IAM role
