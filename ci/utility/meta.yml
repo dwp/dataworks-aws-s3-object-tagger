@@ -121,7 +121,7 @@ meta:
             - -exc
             - |
               # Change these values in the batch_object_tagger.tf file
-              if [[ "${$SUBSYSTEM}" == "PDM" ]];
+              if [[ "${SUBSYSTEM}" == "PDM" ]];
               then
                   DATA_S3_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.data_s3_prefix' )
                   CSV_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.config_prefix' )
