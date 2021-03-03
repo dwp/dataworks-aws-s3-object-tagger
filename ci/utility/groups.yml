@@ -11,3 +11,15 @@ groups:
     - rbac-csv-upload-integration
     - rbac-csv-upload-preprod
     - rbac-csv-upload-production
+  - name: pt-object-tagging
+    jobs:
+      - pt-object-tagging-dev
+      - pt-object-tagging-qa
+      - pt-object-tagging-integration
+      - pt-object-tagging-preprod
+      - pt-object-tagging-production
+      - pt-rbac-csv-upload-dev
+      - pt-rbac-csv-upload-qa
+      - pt-rbac-csv-upload-integration
+      - pt-rbac-csv-upload-preprod
+      - pt-rbac-csv-upload-production

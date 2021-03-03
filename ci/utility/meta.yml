@@ -121,10 +121,17 @@ meta:
             - -exc
             - |
               # Change these values in the batch_object_tagger.tf file
-              CSV_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.config_prefix' )
-              FILE_NAME=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.config_file' )
-              DATA_S3_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.data_s3_prefix' )
-
+              if [[ "${$SUBSYSTEM}" == "PDM" ]];
+              then
+                  DATA_S3_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.data_s3_prefix' )
+                  CSV_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.config_prefix' )
+                  FILE_NAME=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pdm_object_tagger_data_classification.value.config_file' )
+              elif [[ "${$SUBSYSTEM}" == "PaymentTimelines" ]];
+              then
+                  DATA_S3_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pt_object_tagger_data_classification.value.data_s3_prefix' )
+                  CSV_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pt_object_tagger_data_classification.value.config_prefix' )
+                  FILE_NAME=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.pt_object_tagger_data_classification.value.config_file' )
+              fi
               source /assume-role
               pipeline_name=`cat "meta/build_pipeline_name"`
               job_name=`cat "meta/build_job_name"`

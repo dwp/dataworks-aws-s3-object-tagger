@@ -1,34 +1,34 @@
 jobs:
-  - name: rbac-csv-upload-production
+  - name: pt-rbac-csv-upload-preprod
     max_in_flight: 1
     serial: true
     plan:
       - get: rbac-csv
         trigger: true
         passed:
-        - rbac-csv-upload-preprod
+        - rbac-csv-upload-qa
       - get: aws-common-infrastructure
         passed:
-          - rbac-csv-upload-preprod
+          - rbac-csv-upload-qa
       - .: (( inject meta.plan.terraform-output-common ))
         config:
           params:
-            TF_WORKSPACE: production
+            TF_WORKSPACE: preprod
       - .: (( inject meta.plan.rbac-csv-upload ))
         config:
           params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.preprod)):role/ci
 
-  - name: object-tagging-production
+  - name: pt-object-tagging-preprod
     max_in_flight: 1
     serial: true
     plan:
       - get: rbac-csv
         trigger: true
         passed:
-          - rbac-csv-upload-production
+          - rbac-csv-upload-integration
       - put: meta
-        resource: meta-production
+        resource: meta-preprod
       - get: aws-common-infrastructure
         passed:
           - rbac-csv-upload-preprod
@@ -38,9 +38,9 @@ jobs:
       - .: (( inject meta.plan.terraform-output-common ))
         config:
           params:
-            TF_WORKSPACE: production
+            TF_WORKSPACE: preprod
       - .: (( inject meta.plan.object-tagging-batch ))
         config:
           params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
-            SUBSYSTEM: "PDM"
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.preprod)):role/ci
+            SUBSYSTEM: "PaymentTimelines"

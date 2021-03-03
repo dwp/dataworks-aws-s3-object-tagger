@@ -1,5 +1,5 @@
 jobs:
-  - name: rbac-csv-upload-production
+  - name: pt-rbac-csv-upload-production
     max_in_flight: 1
     serial: true
     plan:
@@ -19,7 +19,7 @@ jobs:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
 
-  - name: object-tagging-production
+  - name: pt-object-tagging-production
     max_in_flight: 1
     serial: true
     plan:
@@ -39,8 +39,8 @@ jobs:
         config:
           params:
             TF_WORKSPACE: production
-      - .: (( inject meta.plan.object-tagging-batch ))
+      - .: (( inject meta.plan.pt-object-tagging-batch ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
-            SUBSYSTEM: "PDM"
+            SUBSYSTEM: "PaymentTimelines"
