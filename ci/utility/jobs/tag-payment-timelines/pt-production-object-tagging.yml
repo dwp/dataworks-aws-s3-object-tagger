@@ -42,7 +42,7 @@ jobs:
         config:
           params:
             TF_WORKSPACE: production
-      - .: (( inject meta.plan.pt-object-tagging-batch ))
+      - .: (( inject meta.plan.object-tagging-batch ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
