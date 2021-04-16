@@ -122,9 +122,9 @@ meta:
             - |
               # Change these values in the batch_object_tagger.tf file
               echo "Using output name ${OUTPUTS_PREFIX_NAME}"
-              DATA_S3_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.${OUTPUTS_PREFIX_NAME}.value.data_s3_prefix' )
-              CSV_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.${OUTPUTS_PREFIX_NAME}.value.config_prefix' )
-              FILE_NAME=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r '.${OUTPUTS_PREFIX_NAME}.value.config_file' )
+              DATA_S3_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r ".$OUTPUTS_PREFIX_NAME.value.data_s3_prefix" )
+              CSV_PREFIX=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r ".$OUTPUTS_PREFIX_NAME.value.config_prefix" )
+              FILE_NAME=$(cat terraform-output-aws-s3-object-tagger/outputs.json | jq -r ".$OUTPUTS_PREFIX_NAME.value.config_file" )
 
               source /assume-role
               pipeline_name=`cat "meta/build_pipeline_name"`
