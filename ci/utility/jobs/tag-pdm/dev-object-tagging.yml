@@ -12,7 +12,7 @@ jobs:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
 
-  - name: object-tagging-dev
+  - name: pdm-object-tagging-dev
     max_in_flight: 1
     serial: true
     plan:
