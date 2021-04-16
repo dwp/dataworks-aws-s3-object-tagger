@@ -46,4 +46,4 @@ jobs:
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
-            SUBSYSTEM: "PaymentTimelines"
+            OUTPUT_NAME: pt_object_tagger_data_classification

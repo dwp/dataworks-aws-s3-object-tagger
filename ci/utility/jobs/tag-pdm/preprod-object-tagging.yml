@@ -43,4 +43,4 @@ jobs:
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.preprod)):role/ci
-            SUBSYSTEM: "PDM"
+            OUTPUT_NAME: pdm_object_tagger_data_classification
