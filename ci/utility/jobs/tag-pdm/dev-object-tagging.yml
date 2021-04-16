@@ -1,17 +1,4 @@
 jobs:
-  - name: pdm-rbac-csv-upload-dev
-    max_in_flight: 1
-    serial: true
-    plan:
-      - get: rbac-csv
-        trigger: true
-      - get: aws-common-infrastructure
-      - .: (( inject meta.plan.terraform-output-common ))
-      - .: (( inject meta.plan.rbac-csv-upload ))
-        config:
-          params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
-
   - name: pdm-object-tagging-dev
     max_in_flight: 1
     serial: true
@@ -19,7 +6,7 @@ jobs:
       - get: rbac-csv
         trigger: true
         passed:
-          - pdm-rbac-csv-upload-dev
+          - rbac-csv-upload-dev
       - put: meta
         resource: meta-development
       - get: aws-common-infrastructure

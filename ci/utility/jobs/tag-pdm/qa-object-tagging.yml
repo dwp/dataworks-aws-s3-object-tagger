@@ -1,20 +1,4 @@
 jobs:
-  - name: pdm-rbac-csv-upload-qa
-    max_in_flight: 1
-    serial: true
-    plan:
-      - get: rbac-csv
-        trigger: true
-      - get: aws-common-infrastructure
-      - .: (( inject meta.plan.terraform-output-common ))
-        config:
-          params:
-            TF_WORKSPACE: qa
-      - .: (( inject meta.plan.rbac-csv-upload ))
-        config:
-          params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.qa)):role/ci
-
   - name: pdm-object-tagging-qa
     max_in_flight: 1
     serial: true
@@ -22,12 +6,12 @@ jobs:
       - get: rbac-csv
         trigger: true
         passed:
-          - pdm-rbac-csv-upload-qa
+          - rbac-csv-upload-qa
       - put: meta
         resource: meta-qa
       - get: aws-common-infrastructure
         passed:
-          - pdm-rbac-csv-upload-qa
+          - rbac-csv-upload-qa
       - get: dataworks-aws-s3-object-tagger
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
