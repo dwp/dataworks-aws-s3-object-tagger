@@ -1,0 +1,42 @@
+jobs:
+  - name: clive-rbac-csv-upload-qa
+    max_in_flight: 1
+    serial: true
+    plan:
+      - get: rbac-csv
+        trigger: true
+      - get: aws-common-infrastructure
+      - .: (( inject meta.plan.terraform-output-common ))
+        config:
+          params:
+            TF_WORKSPACE: qa
+      - .: (( inject meta.plan.rbac-csv-upload ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.qa)):role/ci
+
+  - name: clive-object-tagging-qa
+    max_in_flight: 1
+    serial: true
+    plan:
+      - get: rbac-csv
+        trigger: true
+        passed:
+          - clive-rbac-csv-upload-qa
+      - put: meta
+        resource: meta-qa
+      - get: aws-common-infrastructure
+        passed:
+          - clive-rbac-csv-upload-qa
+      - get: dataworks-aws-s3-object-tagger
+      - .: (( inject meta.plan.terraform-bootstrap ))
+      - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
+      - .: (( inject meta.plan.terraform-output-common ))
+        config:
+          params:
+            TF_WORKSPACE: qa
+      - .: (( inject meta.plan.object-tagging-batch ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.qa)):role/ci
+            SUBSYSTEM: "PDM"
