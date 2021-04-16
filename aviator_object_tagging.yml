@@ -5,9 +5,13 @@ spruce:
     merge:
       - with_in: ci/utility/
         regexp: ".*yml"
+      - with_in: ci/utility/jobs/rbac-classification-upload/
+        regexp: ".*yml"
       - with_in: ci/utility/jobs/tag-pdm/
         regexp: ".*yml"
       - with_in: ci/utility/jobs/tag-payment-timelines/
+        regexp: ".*yml"
+      - with_in: ci/utility/jobs/tag-clive/
         regexp: ".*yml"
     to: aviator_pipeline_object_tagging.yml
 fly:

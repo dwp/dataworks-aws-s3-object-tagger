@@ -30,11 +30,6 @@ groups:
       - clive-object-tagging-integration
       - clive-object-tagging-preprod
       - clive-object-tagging-production
-      - clive-rbac-csv-upload-dev
-      - clive-rbac-csv-upload-qa
-      - clive-rbac-csv-upload-integration
-      - clive-rbac-csv-upload-preprod
-      - clive-rbac-csv-upload-production
   - name: rbac-csv-upload
     jobs:
       - rbac-csv-upload-dev

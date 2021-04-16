@@ -24,3 +24,11 @@ output "pt_object_tagger_data_classification" {
     data_s3_prefix = local.pt_s3_prefix
   }
 }
+
+output "clive_object_tagger_data_classification" {
+  value = {
+    config_prefix  = local.config_prefix
+    config_file    = local.config_filename
+    data_s3_prefix = local.clive_s3_prefix
+  }
+}
