@@ -19,7 +19,7 @@ jobs:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.integration)):role/ci
 
-  - name: object-tagging-integration
+  - name: pdm-object-tagging-integration
     max_in_flight: 1
     serial: true
     plan:

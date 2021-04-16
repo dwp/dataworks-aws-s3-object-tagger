@@ -15,7 +15,7 @@ jobs:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.qa)):role/ci
 
-  - name: object-tagging-qa
+  - name: pdm-object-tagging-qa
     max_in_flight: 1
     serial: true
     plan:

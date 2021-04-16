@@ -11,7 +11,7 @@ spruce:
         regexp: ".*yml"
     to: aviator_pipeline_object_tagging.yml
 fly:
-  name: pdm-object-tagging
+  name: object-tagging
   target: utility
   expose: true
   check_creds: true

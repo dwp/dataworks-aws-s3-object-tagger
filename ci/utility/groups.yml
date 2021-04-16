@@ -1,11 +1,11 @@
 groups:
-  - name: object-tagging
+  - name: pdm-object-tagging
     jobs:
-    - object-tagging-dev
-    - object-tagging-qa
-    - object-tagging-integration
-    - object-tagging-preprod
-    - object-tagging-production
+    - pdm-object-tagging-dev
+    - pdm-object-tagging-qa
+    - pdm-object-tagging-integration
+    - pdm-object-tagging-preprod
+    - pdm-object-tagging-production
     - rbac-csv-upload-dev
     - rbac-csv-upload-qa
     - rbac-csv-upload-integration

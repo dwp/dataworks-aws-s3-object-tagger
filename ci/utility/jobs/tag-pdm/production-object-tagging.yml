@@ -19,7 +19,7 @@ jobs:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
 
-  - name: object-tagging-production
+  - name: pdm-object-tagging-production
     max_in_flight: 1
     serial: true
     plan:
