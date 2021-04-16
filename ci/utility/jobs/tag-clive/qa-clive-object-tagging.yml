@@ -15,6 +15,9 @@ jobs:
       - get: dataworks-aws-s3-object-tagger
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
+      config:
+        params:
+          TF_WORKSPACE: qa
       - .: (( inject meta.plan.terraform-output-common ))
         config:
           params:
