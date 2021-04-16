@@ -6,10 +6,10 @@ jobs:
       - get: rbac-csv
         trigger: true
         passed:
-        - rbac-csv-upload-preprod
+        - pt-rbac-csv-upload-preprod
       - get: aws-common-infrastructure
         passed:
-          - rbac-csv-upload-preprod
+          - pt-rbac-csv-upload-preprod
       - .: (( inject meta.plan.terraform-output-common ))
         config:
           params:
@@ -26,12 +26,12 @@ jobs:
       - get: rbac-csv
         trigger: true
         passed:
-          - rbac-csv-upload-production
+          - pt-rbac-csv-upload-production
       - put: meta
         resource: meta-production
       - get: aws-common-infrastructure
         passed:
-          - rbac-csv-upload-preprod
+          - pt-rbac-csv-upload-preprod
       - get: dataworks-aws-s3-object-tagger
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
@@ -46,4 +46,4 @@ jobs:
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
-            OUTPUT_NAME: pt_object_tagger_data_classification
+            OUTPUTS_PREFIX_NAME: pt_object_tagger_data_classification

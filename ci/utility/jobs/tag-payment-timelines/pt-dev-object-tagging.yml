@@ -22,7 +22,7 @@ jobs:
       - get: rbac-csv
         trigger: true
         passed:
-          - rbac-csv-upload-dev
+          - pt-rbac-csv-upload-dev
       - put: meta
         resource: meta-development
       - get: aws-common-infrastructure
@@ -40,4 +40,4 @@ jobs:
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
-            OUTPUT_NAME: pt_object_tagger_data_classification
+            OUTPUTS_PREFIX_NAME: pt_object_tagger_data_classification

@@ -35,3 +35,10 @@ groups:
       - clive-rbac-csv-upload-integration
       - clive-rbac-csv-upload-preprod
       - clive-rbac-csv-upload-production
+  - name: rbac-csv-upload
+    jobs:
+      - rbac-csv-upload-dev
+      - rbac-csv-upload-qa
+      - rbac-csv-upload-integration
+      - rbac-csv-upload-preprod
+      - rbac-csv-upload-production
