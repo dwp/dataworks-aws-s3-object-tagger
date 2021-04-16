@@ -7,9 +7,9 @@ jobs:
         trigger: true
       - get: aws-common-infrastructure
       - .: (( inject meta.plan.terraform-output-common ))
-      config:
-        params:
-          TF_WORKSPACE: default
+        config:
+          params:
+            TF_WORKSPACE: default
       - .: (( inject meta.plan.rbac-csv-upload ))
         config:
           params:
