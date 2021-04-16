@@ -1,4 +1,11 @@
 groups:
+  - name: rbac-csv-upload
+    jobs:
+      - rbac-csv-upload-dev
+      - rbac-csv-upload-qa
+      - rbac-csv-upload-integration
+      - rbac-csv-upload-preprod
+      - rbac-csv-upload-production
   - name: pdm-object-tagging
     jobs:
     - pdm-object-tagging-dev
@@ -6,11 +13,6 @@ groups:
     - pdm-object-tagging-integration
     - pdm-object-tagging-preprod
     - pdm-object-tagging-production
-    - rbac-csv-upload-dev
-    - rbac-csv-upload-qa
-    - rbac-csv-upload-integration
-    - rbac-csv-upload-preprod
-    - rbac-csv-upload-production
   - name: pt-object-tagging
     jobs:
       - pt-object-tagging-dev
@@ -18,8 +20,10 @@ groups:
       - pt-object-tagging-integration
       - pt-object-tagging-preprod
       - pt-object-tagging-production
-      - pt-rbac-csv-upload-dev
-      - pt-rbac-csv-upload-qa
-      - pt-rbac-csv-upload-integration
-      - pt-rbac-csv-upload-preprod
-      - pt-rbac-csv-upload-production
+  - name: clive-object-tagging
+    jobs:
+      - clive-object-tagging-dev
+      - clive-object-tagging-qa
+      - clive-object-tagging-integration
+      - clive-object-tagging-preprod
+      - clive-object-tagging-production

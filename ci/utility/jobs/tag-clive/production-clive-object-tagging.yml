@@ -1,5 +1,5 @@
 jobs:
-  - name: pt-object-tagging-production
+  - name: clive-object-tagging-production
     max_in_flight: 1
     serial: true
     plan:
@@ -7,7 +7,7 @@ jobs:
         trigger: true
         passed:
           - rbac-csv-upload-production
-          - pt-object-tagging-preprod
+          - clive-object-tagging-preprod
       - put: meta
         resource: meta-production
       - get: aws-common-infrastructure
@@ -27,4 +27,4 @@ jobs:
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
-            OUTPUTS_PREFIX_NAME: pt_object_tagger_data_classification
+            OUTPUTS_PREFIX_NAME: clive_object_tagger_data_classification

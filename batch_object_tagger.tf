@@ -7,6 +7,7 @@ locals {
   config_filename                    = "data_classification.csv"
   data_s3_prefix                     = "data/uc/uc.db"
   pt_s3_prefix                       = "data/uc_payment_timelines"
+  clive_s3_prefix                    = "data/uc_clive"
 }
 
 # AWS Batch Job IAM role

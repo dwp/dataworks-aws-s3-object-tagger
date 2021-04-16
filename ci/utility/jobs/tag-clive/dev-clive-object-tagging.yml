@@ -1,30 +1,27 @@
 jobs:
-  - name: pt-object-tagging-production
+  - name: clive-object-tagging-dev
     max_in_flight: 1
     serial: true
     plan:
       - get: rbac-csv
         trigger: true
         passed:
-          - rbac-csv-upload-production
-          - pt-object-tagging-preprod
+          - rbac-csv-upload-dev
       - put: meta
-        resource: meta-production
+        resource: meta-development
       - get: aws-common-infrastructure
-        passed:
-          - rbac-csv-upload-preprod
       - get: dataworks-aws-s3-object-tagger
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
         config:
           params:
-            TF_WORKSPACE: production
+            TF_WORKSPACE: default
       - .: (( inject meta.plan.terraform-output-common ))
         config:
           params:
-            TF_WORKSPACE: production
+            TF_WORKSPACE: default
       - .: (( inject meta.plan.object-tagging-batch ))
         config:
           params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.production)):role/ci
-            OUTPUTS_PREFIX_NAME: pt_object_tagger_data_classification
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
+            OUTPUTS_PREFIX_NAME: clive_object_tagger_data_classification
