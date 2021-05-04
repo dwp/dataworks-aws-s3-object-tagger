@@ -114,7 +114,7 @@ meta:
           AWS_DEFAULT_REGION: eu-west-2
           TIMEOUT: 900   # Time (in minutes) to wait for job to complete
           ASSUME_DURATION: 14400
-          BATCH_JOB_DEFINITION: pdm_object_tagger_job
+          BATCH_JOB_DEFINITION: s3_object_tagger_job
         run:
           path: sh
           args:

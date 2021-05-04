@@ -1,11 +1,11 @@
 locals {
   // Be aware, changing these values will also update the corresponding 'pdm_success_start_object_tagger' Cloudwatch event
   // in aws-pdm-dataset-generation repo.
-  pdm_object_tagger_image            = "${local.account.management}.${data.terraform_remote_state.aws_ingestion.outputs.vpc.vpc.ecr_dkr_domain_name}/dataworks-s3-object-tagger:${var.image_version.s3-object-tagger}"
-  pdm_object_tagger_application_name = "pdm-s3-object-tagger"
+  s3_object_tagger_image            = "${local.account.management}.${data.terraform_remote_state.aws_ingestion.outputs.vpc.vpc.ecr_dkr_domain_name}/dataworks-s3-object-tagger:${var.image_version.s3-object-tagger}"
+  s3_object_tagger_application_name = "s3-object-tagger"
   config_prefix                      = "component/rbac"
   config_filename                    = "data_classification.csv"
-  data_s3_prefix                     = "data/uc/uc.db"
+  pdm_s3_prefix                      = "data/uc/uc.db"
   pt_s3_prefix                       = "data/uc_payment_timelines"
   clive_s3_prefix                    = "data/uc_clive"
 }
@@ -28,13 +28,13 @@ data "aws_iam_policy_document" "batch_assume_policy" {
   }
 }
 
-resource "aws_iam_role" "pdm_object_tagger" {
-  name               = "pdm_object_tagger"
+resource "aws_iam_role" "s3_object_tagger" {
+  name               = "s3_object_tagger"
   assume_role_policy = data.aws_iam_policy_document.batch_assume_policy.json
   tags               = local.common_tags
 }
 
-data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
+data "aws_iam_policy_document" "s3_object_tagger_config_bucket" {
   statement {
     sid    = "AllowS3GetObject"
     effect = "Allow"
@@ -64,7 +64,7 @@ data "aws_iam_policy_document" "pdm_object_tagger_config_bucket" {
   }
 }
 
-data "aws_iam_policy_document" "pdm_object_tagger_published_bucket" {
+data "aws_iam_policy_document" "s3_object_tagger_published_bucket" {
   statement {
     sid    = "AllowS3Tagging"
     effect = "Allow"
@@ -94,24 +94,24 @@ data "aws_iam_policy_document" "pdm_object_tagger_published_bucket" {
   }
 }
 
-resource "aws_iam_policy" "pdm_object_tagger_config" {
-  name   = "pdm_object_tagger_config"
-  policy = data.aws_iam_policy_document.pdm_object_tagger_config_bucket.json
+resource "aws_iam_policy" "s3_object_tagger_config" {
+  name   = "s3_object_tagger_config"
+  policy = data.aws_iam_policy_document.s3_object_tagger_config_bucket.json
 }
 
-resource "aws_iam_policy" "pdm_object_tagger_published" {
-  name   = "pdm_object_tagger_published"
-  policy = data.aws_iam_policy_document.pdm_object_tagger_published_bucket.json
+resource "aws_iam_policy" "s3_object_tagger_published" {
+  name   = "s3_object_tagger_published"
+  policy = data.aws_iam_policy_document.s3_object_tagger_published_bucket.json
 }
 
-resource "aws_iam_role_policy_attachment" "pdm_object_tagger_config" {
-  role       = aws_iam_role.pdm_object_tagger.name
-  policy_arn = aws_iam_policy.pdm_object_tagger_config.arn
+resource "aws_iam_role_policy_attachment" "s3_object_tagger_config" {
+  role       = aws_iam_role.s3_object_tagger.name
+  policy_arn = aws_iam_policy.s3_object_tagger_config.arn
 }
 
-resource "aws_iam_role_policy_attachment" "pdm_object_tagger_published" {
-  role       = aws_iam_role.pdm_object_tagger.name
-  policy_arn = aws_iam_policy.pdm_object_tagger_published.arn
+resource "aws_iam_role_policy_attachment" "s3_object_tagger_published" {
+  role       = aws_iam_role.s3_object_tagger.name
+  policy_arn = aws_iam_policy.s3_object_tagger_published.arn
 }
 
 resource "aws_batch_job_queue" "pdm_object_tagger" {
@@ -122,15 +122,31 @@ resource "aws_batch_job_queue" "pdm_object_tagger" {
   state                = "ENABLED"
 }
 
-resource "aws_batch_job_definition" "pdm_object_tagger" {
-  name = "pdm_object_tagger_job"
+resource "aws_batch_job_queue" "clive_object_tagger" {
+  //  TODO: Move compute environment to fargate once Terraform supports it.
+  compute_environments = [data.terraform_remote_state.aws_ingestion.outputs.k2hb_reconciliation_trimmer_batch.arn]
+  name                 = "clive_object_tagger"
+  priority             = 10
+  state                = "ENABLED"
+}
+
+resource "aws_batch_job_queue" "pt_object_tagger" {
+  //  TODO: Move compute environment to fargate once Terraform supports it.
+  compute_environments = [data.terraform_remote_state.aws_ingestion.outputs.k2hb_reconciliation_trimmer_batch.arn]
+  name                 = "pt_object_tagger"
+  priority             = 10
+  state                = "ENABLED"
+}
+
+resource "aws_batch_job_definition" "s3_object_tagger" {
+  name = "s3_object_tagger_job"
   type = "container"
 
   container_properties = <<CONTAINER_PROPERTIES
   {
       "command": ["--data-s3-prefix", "Ref::data-s3-prefix", "--csv-location", "Ref::csv-location"],
-      "image": "${local.pdm_object_tagger_image}",
-      "jobRoleArn" : "${aws_iam_role.pdm_object_tagger.arn}",
+      "image": "${local.s3_object_tagger_image}",
+      "jobRoleArn" : "${aws_iam_role.s3_object_tagger.arn}",
       "memory": 1024,
       "vcpus": 2,
       "environment": [
@@ -138,7 +154,7 @@ resource "aws_batch_job_definition" "pdm_object_tagger" {
           {"name": "AWS_DEFAULT_REGION", "value": "eu-west-2"},
           {"name": "DATA_BUCKET", "value": "${data.terraform_remote_state.common.outputs.published_bucket.id}"},
           {"name": "ENVIRONMENT", "value": "${local.environment}"},
-          {"name": "APPLICATION", "value": "${local.pdm_object_tagger_application_name}"}
+          {"name": "APPLICATION", "value": "${local.s3_object_tagger_application_name}"}
       ],
       "ulimits": [
         {
