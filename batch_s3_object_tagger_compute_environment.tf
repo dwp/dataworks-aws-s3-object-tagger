@@ -82,6 +82,16 @@ resource "aws_security_group_rule" "s3_object_tagger_batch_to_s3" {
   security_group_id = aws_security_group.s3_object_tagger_batch.id
 }
 
+resource "aws_security_group_rule" "ingress_https_vpc_endpoints_from_batch" {
+  description              = "Allow HTTPS traffic from s3 object tagger"
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = data.terraform_remote_state.internal_compute.outputs.vpc.vpc.interface_vpce_sg_id
+  to_port                  = 443
+  type                     = "ingress"
+  source_security_group_id = aws_security_group.s3_object_tagger_batch.id
+}
+
 resource "aws_security_group_rule" "s3_object_tagger_batch_to_s3_http" {
   description       = "s3 object tagger batch Batch to S3 http for YUM"
   type              = "egress"
