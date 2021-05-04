@@ -15,3 +15,5 @@ variable "image_version" {
     s3-object-tagger = "0.0.11"
   }
 }
+
+variable "ecs_hardened_ami_id" {}

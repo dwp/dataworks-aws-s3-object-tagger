@@ -1,10 +1,23 @@
-#TODO not sure if this is still in use, commented out until something breaks
-//output "pt_object_tagger_batch" {
-//  value = {
-//    job_queue      = aws_batch_job_queue.pt_object_tagger
-//    job_definition = aws_batch_job_definition.s3_object_tagger
-//  }
-//}
+output "pdm_object_tagger_batch" {
+  value = {
+    job_queue      = aws_batch_job_queue.pdm_object_tagger
+    job_definition = aws_batch_job_definition.s3_object_tagger
+  }
+}
+
+output "clive_object_tagger_batch" {
+  value = {
+    job_queue      = aws_batch_job_queue.clive_object_tagger
+    job_definition = aws_batch_job_definition.s3_object_tagger
+  }
+}
+
+output "pt_object_tagger_batch" {
+  value = {
+    job_queue      = aws_batch_job_queue.pt_object_tagger
+    job_definition = aws_batch_job_definition.s3_object_tagger
+  }
+}
 
 output "s3_object_tagger_batch" {
   value = {
