@@ -1,5 +1,3 @@
-
-
 # AWS Batch Job IAM role
 data "aws_iam_policy_document" "batch_assume_policy" {
   statement {

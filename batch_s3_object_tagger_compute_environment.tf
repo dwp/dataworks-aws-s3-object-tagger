@@ -23,6 +23,32 @@ resource "aws_iam_role" "ecs_instance_role_s3_object_tagger_batch" {
 EOF
 }
 
+# Custom policy to allow use of default EBS encryption key by Batch instance role
+data "aws_iam_policy_document" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk" {
+  statement {
+    sid    = "AllowUseDefaultEbsCmk"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+    resources = [data.terraform_remote_state.security_tools.outputs.ebs_cmk.arn]
+  }
+}
+
+resource "aws_iam_policy" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk" {
+  name   = "ecs_instance_role_s3_object_tagger_batch_ebs_cmk"
+  policy = data.aws_iam_policy_document.ecs_instance_role_s3_object_tagger_batch_ebs_cmk.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk" {
+  role       = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
+  policy_arn = aws_iam_policy.ecs_instance_role_s3_object_tagger_batch_ebs_cmk.arn
+}
+
 resource "aws_iam_role_policy_attachment" "ecs_instance_role_s3_object_tagger_batch" {
   role       = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
@@ -38,32 +64,32 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_role_s3_object_tagger_ba
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_security_group" "s3_object_tagger_batch_batch" {
-  name                   = "s3_object_tagger_batch_batch_security_group"
+resource "aws_security_group" "s3_object_tagger_batch" {
+  name                   = "s3_object_tagger_batch_security_group"
   description            = "s3 object tagger batch AWS Batch"
   revoke_rules_on_delete = true
   vpc_id                 = local.internal_compute_vpc_id
   tags                   = local.common_tags
 }
 
-resource "aws_security_group_rule" "s3_object_tagger_batch_batch_to_s3" {
+resource "aws_security_group_rule" "s3_object_tagger_batch_to_s3" {
   description       = "s3 object tagger Batch to S3"
   type              = "egress"
   prefix_list_ids   = [local.internal_compute_vpc_prefix_list_ids_s3]
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  security_group_id = aws_security_group.s3_object_tagger_batch_batch.id
+  security_group_id = aws_security_group.s3_object_tagger_batch.id
 }
 
-resource "aws_security_group_rule" "s3_object_tagger_batch_batch_to_s3_http" {
+resource "aws_security_group_rule" "s3_object_tagger_batch_to_s3_http" {
   description       = "s3 object tagger batch Batch to S3 http for YUM"
   type              = "egress"
   prefix_list_ids   = [local.internal_compute_vpc_prefix_list_ids_s3]
   protocol          = "tcp"
   from_port         = 80
   to_port           = 80
-  security_group_id = aws_security_group.s3_object_tagger_batch_batch.id
+  security_group_id = aws_security_group.s3_object_tagger_batch.id
 }
 
 
@@ -74,7 +100,7 @@ resource "aws_security_group_rule" "s3_object_tagger_egress_internet_proxy" {
   protocol                 = "tcp"
   from_port                = 3128
   to_port                  = 3128
-  security_group_id        = aws_security_group.s3_object_tagger_batch_batch.id
+  security_group_id        = aws_security_group.s3_object_tagger_batch.id
 }
 
 resource "aws_security_group_rule" "s3_object_tagger_ingress_internet_proxy" {
@@ -83,7 +109,7 @@ resource "aws_security_group_rule" "s3_object_tagger_ingress_internet_proxy" {
   from_port                = 3128
   to_port                  = 3128
   protocol                 = "tcp"
-  source_security_group_id = aws_security_group.s3_object_tagger_batch_batch.id
+  source_security_group_id = aws_security_group.s3_object_tagger_batch.id
   security_group_id        = data.terraform_remote_state.internal_compute.outputs.internet_proxy.sg
 }
 
@@ -102,7 +128,7 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
     desired_vcpus = 10
     max_vcpus     = local.batch_s3_tagger_compute_environment_max_cpus[local.environment]
 
-    security_group_ids = [aws_security_group.s3_object_tagger_batch_batch.id]
+    security_group_ids = [aws_security_group.s3_object_tagger_batch.id]
     subnets            = local.internal_compute_subnets.ids
     type               = "EC2"
 
