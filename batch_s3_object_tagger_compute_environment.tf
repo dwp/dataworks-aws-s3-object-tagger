@@ -103,7 +103,7 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
     max_vcpus     = local.batch_s3_tagger_compute_environment_max_cpus[local.environment]
 
     security_group_ids = [aws_security_group.s3_object_tagger_batch_batch.id]
-    subnets            = local.internal_compute_vpc_id
+    subnets            = local.internal_compute_subnets.id
     type               = "EC2"
 
     tags = merge(
