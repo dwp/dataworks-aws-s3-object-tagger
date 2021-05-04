@@ -21,10 +21,10 @@ output "pt_object_tagger_batch" {
 
 output "s3_object_tagger_batch_job_def" {
   value = {
-    clive_job_queue      = aws_batch_job_queue.clive_object_tagger
-    pdm_job_queue      = aws_batch_job_queue.pdm_object_tagger
-    pt_job_queue      = aws_batch_job_queue.pt_object_tagger
-    job_definition = aws_batch_job_definition.s3_object_tagger
+    clive_job_queue = aws_batch_job_queue.clive_object_tagger
+    pdm_job_queue   = aws_batch_job_queue.pdm_object_tagger
+    pt_job_queue    = aws_batch_job_queue.pt_object_tagger
+    job_definition  = aws_batch_job_definition.s3_object_tagger
   }
 }
 
