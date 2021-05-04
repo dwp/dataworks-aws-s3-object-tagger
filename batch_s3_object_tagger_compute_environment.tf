@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_role_s3_object_tagger_ba
 }
 
 resource "aws_iam_instance_profile" "ecs_instance_role_s3_object_tagger_batch" {
-  name = "ecs_instance_role_csc_profile"
+  name = "ecs_instance_role_s3_object_tagger_profile"
   role = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
 }
 
@@ -99,7 +99,7 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
     allocation_strategy = "BEST_FIT_PROGRESSIVE"
 
     min_vcpus     = 0
-    desired_vcpus = 0
+    desired_vcpus = 10
     max_vcpus     = local.batch_s3_tagger_compute_environment_max_cpus[local.environment]
 
     security_group_ids = [aws_security_group.s3_object_tagger_batch_batch.id]
