@@ -32,3 +32,7 @@ output "clive_object_tagger_data_classification" {
     data_s3_prefix = local.clive_s3_prefix
   }
 }
+
+output "s3_object_tagger_batch_sg" {
+  value = aws_security_group.s3_object_tagger_batch
+}
