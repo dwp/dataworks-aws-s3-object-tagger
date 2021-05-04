@@ -33,35 +33,6 @@ resource "aws_iam_instance_profile" "ecs_instance_role_s3_object_tagger_batch" {
   role = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
 }
 
-//# Custom policy to allow use of default EBS encryption key by Batch instance role
-//data "aws_iam_policy_document" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk" {
-//
-//  statement {
-//    sid    = "AllowUseDefaultEbsCmk"
-//    effect = "Allow"
-//
-//    actions = [
-//      "kms:Encrypt",
-//      "kms:Decrypt",
-//      "kms:ReEncrypt*",
-//      "kms:GenerateDataKey*",
-//      "kms:DescribeKey",
-//    ]
-//
-//    resources = [data.terraform_remote_state.security-tools.outputs.ebs_cmk.arn]
-//  }
-//}
-//
-//resource "aws_iam_policy" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk" {
-//  name   = "ecs_instance_role_s3_object_tagger_batch_ebs_cmk"
-//  policy = data.aws_iam_policy_document.ecs_instance_role_s3_object_tagger_batch_ebs_cmk.json
-//}
-//
-//resource "aws_iam_role_policy_attachment" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk" {
-//  role       = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
-//  policy_arn = aws_iam_policy.ecs_instance_role_s3_object_tagger_batch_ebs_cmk.arn
-//}
-
 resource "aws_iam_role_policy_attachment" "ecs_instance_role_s3_object_tagger_batch_ecr" {
   role       = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
@@ -96,7 +67,7 @@ resource "aws_security_group_rule" "s3_object_tagger_batch_batch_to_s3_http" {
 }
 
 
-resource "aws_security_group_rule" "csc_egress_internet_proxy" {
+resource "aws_security_group_rule" "s3_object_tagger_egress_internet_proxy" {
   description              = "s3 object tagger batch to Internet Proxy (for ACM-PCA)"
   type                     = "egress"
   source_security_group_id = data.terraform_remote_state.internal_compute.outputs.internet_proxy.sg
@@ -106,7 +77,7 @@ resource "aws_security_group_rule" "csc_egress_internet_proxy" {
   security_group_id        = aws_security_group.s3_object_tagger_batch_batch.id
 }
 
-resource "aws_security_group_rule" "csc_ingress_internet_proxy" {
+resource "aws_security_group_rule" "s3_object_tagger_ingress_internet_proxy" {
   description              = "Allow proxy access from s3 object tagger batch"
   type                     = "ingress"
   from_port                = 3128

@@ -1,14 +1,4 @@
-locals {
-  // Be aware, changing these values will also update the corresponding 'pdm_success_start_object_tagger' Cloudwatch event
-  // in aws-pdm-dataset-generation repo.
-  s3_object_tagger_image            = "${local.account.management}.${data.terraform_remote_state.aws_ingestion.outputs.vpc.vpc.ecr_dkr_domain_name}/dataworks-s3-object-tagger:${var.image_version.s3-object-tagger}"
-  s3_object_tagger_application_name = "s3-object-tagger"
-  config_prefix                     = "component/rbac"
-  config_filename                   = "data_classification.csv"
-  pdm_s3_prefix                     = "data/uc/uc.db"
-  pt_s3_prefix                      = "data/uc_payment_timelines"
-  clive_s3_prefix                   = "data/uc_clive"
-}
+
 
 # AWS Batch Job IAM role
 data "aws_iam_policy_document" "batch_assume_policy" {
@@ -116,7 +106,7 @@ resource "aws_iam_role_policy_attachment" "s3_object_tagger_published" {
 
 resource "aws_batch_job_queue" "pdm_object_tagger" {
   //  TODO: Move compute environment to fargate once Terraform supports it.
-  compute_environments = [data.terraform_remote_state.aws_ingestion.outputs.k2hb_reconciliation_trimmer_batch.arn]
+  compute_environments = [aws_batch_compute_environment.s3_object_tagger_batch.arn]
   name                 = "pdm_object_tagger"
   priority             = 10
   state                = "ENABLED"
@@ -124,7 +114,7 @@ resource "aws_batch_job_queue" "pdm_object_tagger" {
 
 resource "aws_batch_job_queue" "clive_object_tagger" {
   //  TODO: Move compute environment to fargate once Terraform supports it.
-  compute_environments = [data.terraform_remote_state.aws_ingestion.outputs.k2hb_reconciliation_trimmer_batch.arn]
+  compute_environments = [aws_batch_compute_environment.s3_object_tagger_batch.arn]
   name                 = "clive_object_tagger"
   priority             = 10
   state                = "ENABLED"
@@ -132,7 +122,7 @@ resource "aws_batch_job_queue" "clive_object_tagger" {
 
 resource "aws_batch_job_queue" "pt_object_tagger" {
   //  TODO: Move compute environment to fargate once Terraform supports it.
-  compute_environments = [data.terraform_remote_state.aws_ingestion.outputs.k2hb_reconciliation_trimmer_batch.arn]
+  compute_environments = [aws_batch_compute_environment.s3_object_tagger_batch.arn]
   name                 = "pt_object_tagger"
   priority             = 10
   state                = "ENABLED"
