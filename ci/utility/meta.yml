@@ -115,6 +115,7 @@ meta:
           TIMEOUT: 900   # Time (in minutes) to wait for job to complete
           ASSUME_DURATION: 14400
           BATCH_JOB_DEFINITION: s3_object_tagger_job
+          BATCH_JOB_QUEUE: ""
         run:
           path: sh
           args:
@@ -136,7 +137,7 @@ meta:
               CONFIG_BUCKET=$(cat terraform-output-common/outputs.json | jq -r '.config_bucket.value.id' )
               CSV_LOCATION="s3://${CONFIG_BUCKET}/${CSV_PREFIX}/${FILE_NAME}"
 
-              job_id=$(aws batch submit-job --job-queue pdm_object_tagger --job-definition ${BATCH_JOB_DEFINITION} \
+              job_id=$(aws batch submit-job --job-queue ${BATCH_JOB_QUEUE} --job-definition ${BATCH_JOB_DEFINITION} \
                 --job-name ${pipeline_name}_${job_name}_${build_number} \
                 --parameters "{\"data-s3-prefix\": \"${DATA_S3_PREFIX}\", \"csv-location\": \"${CSV_LOCATION}\"}" \
                 | jq -e --raw-output .jobId)
