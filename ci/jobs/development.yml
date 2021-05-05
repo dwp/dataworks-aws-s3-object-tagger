@@ -4,6 +4,8 @@ jobs:
     plan:
       - get: dataworks-aws-s3-object-tagger
         trigger: true
+      - get: dw-al2-ecs-ami
+        trigger: true
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-apply ))
       - .: (( inject meta.plan.terraform-plan ))

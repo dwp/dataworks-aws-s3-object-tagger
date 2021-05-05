@@ -16,6 +16,4 @@ variable "image_version" {
   }
 }
 
-variable "ecs_hardened_ami_id" {
-  default = "ami-05b51253aa83ef988"
-}
+variable "ecs_hardened_ami_id" {}

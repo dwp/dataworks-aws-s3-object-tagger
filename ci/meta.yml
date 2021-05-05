@@ -47,6 +47,7 @@ meta:
             - -exc
             - |
               cp ../terraform-bootstrap/terraform.tf .
+              export TF_VAR_ecs_hardened_ami_id=$(cat ../dw-al2-ecs-ami/id)
               terraform workspace show
               terraform init
               terraform plan -out terraform.plan
@@ -55,6 +56,7 @@ meta:
         inputs:
           - name: dataworks-aws-s3-object-tagger
           - name: terraform-bootstrap
+          - name: dw-al2-ecs-ami
     terraform-plan:
       task: terraform-plan
       .: (( inject meta.plan.terraform-common-config ))
@@ -65,6 +67,7 @@ meta:
             - -exc
             - |
               cp ../terraform-bootstrap/terraform.tf .
+              export TF_VAR_ecs_hardened_ami_id=$(cat ../dw-al2-ecs-ami/id)
               terraform workspace show
               terraform init
               terraform plan $DETAILED_EXITCODE
@@ -72,5 +75,6 @@ meta:
         inputs:
           - name: dataworks-aws-s3-object-tagger
           - name: terraform-bootstrap
+          - name: dw-al2-ecs-ami
       params:
         DETAILED_EXITCODE: -detailed-exitcode

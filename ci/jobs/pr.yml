@@ -4,6 +4,8 @@ jobs:
       - get: dataworks-aws-s3-object-tagger-pr
         trigger: true
         version: every
+      - get: dw-al2-ecs-ami
+        trigger: true
       - put: dataworks-aws-s3-object-tagger-pr
         params:
           path: dataworks-aws-s3-object-tagger-pr
