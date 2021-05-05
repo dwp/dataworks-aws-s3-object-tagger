@@ -28,3 +28,4 @@ jobs:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.preprod)):role/ci
             OUTPUTS_PREFIX_NAME: pdm_object_tagger_data_classification
+            BATCH_JOB_QUEUE: pdm_object_tagger
