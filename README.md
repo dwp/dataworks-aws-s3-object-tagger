@@ -2,21 +2,18 @@
 
 ## S3 Object tagger application infrastructure
 
-This repo contains Makefile and base terraform folders and jinja2 files to fit the standard pattern.
-This repo is a base to create new Terraform repos, renaming the template files and adding the githooks submodule, making the repo ready for use.
+This repo deploys out the infrastructure required for the s3-object-tagger application. This includes an AWS Batch Compute environment, a shared job definition which uses the docker image release of [dataworks-s3-object-tagger](https://github.com/dwp/dataworks-s3-object-tagger)
+and finally a batch job queue per service which requires one. (Currently: PDM, Payment Timelines and Clive)
 
-Running aviator will create the pipeline required on the AWS-Concourse instance, in order pass a mandatory CI ran status check.  this will likely require you to login to Concourse, if you haven't already.
+## Configuring the documents to be tagged
+Update the data-classification.csv file with the correct information.
 
-After cloning this repo, please generate `terraform.tf` and `terraform.tfvars` files:  
-`make bootstrap`
+## When does the object tagging run
+Any of these cases will cause the object tagger to run across the route to live:
 
-In addition, you may want to do the following: 
+1) An update to the data-classification.csv RBAC file.
+2) A manual kick off of the pipeline, see the 'object-tagging' pipeline in Concourse.
+3) An automatic EventBridge rule, with a target to initiate the AWS Batch job (configured outside of this repo and in the services repo. eg Clives own repo)
 
-1. Create non-default Terraform workspaces as and if required:  
-    `make terraform-workspace-new workspace=<workspace_name>` e.g.  
-    ```make terraform-workspace-new workspace=qa```
-
-1. Configure Concourse CI pipeline:
-    1. Add/remove jobs in `./ci/jobs` as required 
-    1. Create CI pipeline:  
-`aviator`
+Note: The utility tasks handle the functional running of the object tagging, see the 'object-tagging' pipeline in Concourse.
+The 's3-object-tagger-infra' pipeline rolls out the infrastructure.
