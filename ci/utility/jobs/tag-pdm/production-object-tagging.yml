@@ -3,7 +3,7 @@ jobs:
     max_in_flight: 1
     serial: true
     plan:
-      - get: 11pm-UTC
+      - get: 01am-UTC
         trigger: true
       - get: rbac-csv
         trigger: true
