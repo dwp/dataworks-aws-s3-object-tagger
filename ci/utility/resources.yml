@@ -30,6 +30,12 @@ resources:
     webhook_token: ((dataworks.concourse_github_webhook_token))
     check_every: 720h
 
+  - name: 11pm-UTC
+    type: time
+    source:
+      start: 11:00 PM
+      stop: 12:00 AM
+
   - name: meta-development
     type: meta
 
