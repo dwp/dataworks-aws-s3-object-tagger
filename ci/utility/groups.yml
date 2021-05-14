@@ -6,6 +6,7 @@ groups:
       - rbac-csv-upload-integration
       - rbac-csv-upload-preprod
       - rbac-csv-upload-production
+
   - name: pdm-object-tagging
     jobs:
     - pdm-object-tagging-dev
@@ -13,6 +14,7 @@ groups:
     - pdm-object-tagging-integration
     - pdm-object-tagging-preprod
     - pdm-object-tagging-production
+
   - name: pt-object-tagging
     jobs:
       - pt-object-tagging-dev
@@ -20,6 +22,7 @@ groups:
       - pt-object-tagging-integration
       - pt-object-tagging-preprod
       - pt-object-tagging-production
+
   - name: clive-object-tagging
     jobs:
       - clive-object-tagging-dev
@@ -27,3 +30,7 @@ groups:
       - clive-object-tagging-integration
       - clive-object-tagging-preprod
       - clive-object-tagging-production
+  
+  - name: update-pipeline
+    jobs:
+      - update-pipeline-utility

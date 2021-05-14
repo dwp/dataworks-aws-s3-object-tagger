@@ -30,7 +30,19 @@ resources:
     webhook_token: ((dataworks.concourse_github_webhook_token))
     check_every: 720h
 
-  - name: 01am-UTC
+  - name: dataworks-aws-s3-object-tagger-update-pipeline-utility
+    type: git
+    source:
+      branch: master
+      uri: https://github.com/dwp/dataworks-aws-s3-object-tagger.git
+      access_token: ((dataworks-secrets.concourse_github_pat))
+      paths:
+        - ci/utility/*
+        - aviator.yml
+    webhook_token: ((dataworks.concourse_github_webhook_token))
+    check_every: 5m
+
+  - name: utc-01-00
     type: time
     source:
       start: 01:00 AM

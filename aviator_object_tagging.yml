@@ -5,6 +5,8 @@ spruce:
     merge:
       - with_in: ci/utility/
         regexp: ".*yml"
+      - with_in: ci/utility/jobs/
+        regexp: ".*yml"
       - with_in: ci/utility/jobs/rbac-classification-upload/
         regexp: ".*yml"
       - with_in: ci/utility/jobs/tag-pdm/
