@@ -1,0 +1,29 @@
+jobs:
+  - name: update-pipeline-utility
+    plan:
+      - get: dataworks-aws-s3-object-tagger
+        resource: dataworks-aws-s3-object-tagger-update-pipeline-utility
+        trigger: true
+      - task: aviator
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ((dataworks.docker_aviator_repository))
+              version: ((dataworks.docker_aviator_version))
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                sed -i 's/fly/nofly/' aviator_object_tagging.yml
+                /usr/bin/aviator -f aviator_object_tagging.yml
+                mv aviator_pipeline_object_tagging.yml ../pipeline
+            dir: dataworks-aws-s3-object-tagger
+          inputs:
+            - name: dataworks-aws-s3-object-tagger
+          outputs:
+            - name: pipeline
+      - set_pipeline: object-tagging
+        file: pipeline/aviator_pipeline_object_tagging.yml
