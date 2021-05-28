@@ -64,14 +64,6 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_role_s3_object_tagger_ba
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_security_group" "s3_object_tagger_batch" {
-  name                   = "s3_object_tagger_batch_security_group"
-  description            = "s3 object tagger batch AWS Batch"
-  revoke_rules_on_delete = true
-  vpc_id                 = local.internal_compute_vpc_id
-  tags                   = local.common_tags
-}
-
 resource "aws_security_group_rule" "s3_object_tagger_batch_to_s3" {
   description       = "s3 object tagger Batch to S3"
   type              = "egress"
