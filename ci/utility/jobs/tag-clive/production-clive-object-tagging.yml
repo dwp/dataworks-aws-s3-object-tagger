@@ -7,12 +7,9 @@ jobs:
         trigger: true
         passed:
           - rbac-csv-upload-production
-          - clive-object-tagging-preprod
       - put: meta
         resource: meta-production
       - get: aws-common-infrastructure
-        passed:
-          - rbac-csv-upload-preprod
       - get: dataworks-aws-s3-object-tagger
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
