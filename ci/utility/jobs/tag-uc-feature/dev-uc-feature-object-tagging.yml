@@ -24,5 +24,5 @@ jobs:
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
-            OUTPUTS_PREFIX_NAME: uc-feature_object_tagger_data_classification
+            OUTPUTS_PREFIX_NAME: uc_feature_object_tagger_data_classification
             BATCH_JOB_QUEUE: uc_feature_object_tagger
