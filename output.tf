@@ -19,6 +19,13 @@ output "pt_object_tagger_batch" {
   }
 }
 
+output "uc_feature_object_tagger_batch" {
+  value = {
+    job_queue      = aws_batch_job_queue.uc_feature_object_tagger
+    job_definition = aws_batch_job_definition.s3_object_tagger
+  }
+}
+
 output "s3_object_tagger_batch" {
   value = {
     clive_job_queue = aws_batch_job_queue.clive_object_tagger
@@ -49,6 +56,14 @@ output "clive_object_tagger_data_classification" {
     config_prefix  = local.config_prefix
     config_file    = local.config_filename
     data_s3_prefix = local.clive_s3_prefix
+  }
+}
+
+output "uc_feature_object_tagger_data_classification" {
+  value = {
+    config_prefix  = local.config_prefix
+    config_file    = local.config_filename
+    data_s3_prefix = local.uc_feature_s3_prefix
   }
 }
 
