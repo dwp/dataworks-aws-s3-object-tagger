@@ -108,6 +108,7 @@ resource "aws_batch_job_queue" "pdm_object_tagger" {
   name                 = "pdm_object_tagger"
   priority             = 10
   state                = "ENABLED"
+  tags                 = merge({"Name": "pdm_object_tagger_queue"}, local.common_tags)
 }
 
 resource "aws_batch_job_queue" "clive_object_tagger" {
@@ -116,6 +117,7 @@ resource "aws_batch_job_queue" "clive_object_tagger" {
   name                 = "clive_object_tagger"
   priority             = 10
   state                = "ENABLED"
+  tags                 = merge({"Name": "clive_object_tagger_queue"}, local.common_tags)
 }
 
 resource "aws_batch_job_queue" "pt_object_tagger" {
@@ -124,6 +126,7 @@ resource "aws_batch_job_queue" "pt_object_tagger" {
   name                 = "pt_object_tagger"
   priority             = 10
   state                = "ENABLED"
+  tags                 = merge({"Name": "pt_object_tagger_queue"}, local.common_tags)
 }
 
 resource "aws_batch_job_queue" "uc_feature_object_tagger" {
@@ -132,6 +135,7 @@ resource "aws_batch_job_queue" "uc_feature_object_tagger" {
   name                 = "uc_feature_object_tagger"
   priority             = 10
   state                = "ENABLED"
+  tags                 = merge({"Name": "uc_feature_object_tagger_queue"}, local.common_tags)
 }
 
 resource "aws_batch_job_definition" "s3_object_tagger" {
