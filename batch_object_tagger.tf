@@ -126,6 +126,14 @@ resource "aws_batch_job_queue" "pt_object_tagger" {
   state                = "ENABLED"
 }
 
+resource "aws_batch_job_queue" "uc_feature_object_tagger" {
+  //  TODO: Move compute environment to fargate once Terraform supports it.
+  compute_environments = [aws_batch_compute_environment.s3_object_tagger_batch.arn]
+  name                 = "uc_feature_object_tagger"
+  priority             = 10
+  state                = "ENABLED"
+}
+
 resource "aws_batch_job_definition" "s3_object_tagger" {
   name = "s3_object_tagger_job"
   type = "container"

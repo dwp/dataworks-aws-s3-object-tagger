@@ -1,0 +1,28 @@
+jobs:
+  - name: uc-feature-object-tagging-integration
+    max_in_flight: 1
+    serial: true
+    plan:
+      - get: rbac-csv
+        trigger: true
+        passed:
+          - rbac-csv-upload-integration
+      - put: meta
+        resource: meta-integration
+      - get: aws-common-infrastructure
+      - get: dataworks-aws-s3-object-tagger
+      - .: (( inject meta.plan.terraform-bootstrap ))
+      - .: (( inject meta.plan.terraform-output-aws-s3-object-tagger ))
+        config:
+          params:
+            TF_WORKSPACE: integration
+      - .: (( inject meta.plan.terraform-output-common ))
+        config:
+          params:
+            TF_WORKSPACE: integration
+      - .: (( inject meta.plan.object-tagging-batch ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.integration)):role/ci
+            OUTPUTS_PREFIX_NAME: uc-feature_object_tagger_data_classification
+            BATCH_JOB_QUEUE: uc-feature_object_tagger

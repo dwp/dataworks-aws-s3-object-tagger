@@ -11,6 +11,7 @@ locals {
   pdm_s3_prefix                     = "data/uc/uc.db"
   pt_s3_prefix                      = "data/uc_payment_timelines"
   clive_s3_prefix                   = "data/uc_clive"
+  uc_feature_s3_prefix              = "data/uc_feature"
 
   batch_s3_tagger_compute_environment_max_cpus = {
     development = 100
