@@ -13,7 +13,8 @@ output "s3_object_tagger_batch" {
         arn = aws_batch_job_queue.uc_feature_object_tagger.arn
     }
     job_definition  = {
-        id = aws_batch_job_definition.s3_object_tagger.id
+        id   = aws_batch_job_definition.s3_object_tagger.id
+        name = aws_batch_job_definition.s3_object_tagger.name
     }
   }
 }
