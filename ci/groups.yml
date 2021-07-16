@@ -10,6 +10,10 @@ groups:
   - name: pull-request
     jobs:
       - dataworks-aws-s3-object-tagger-pr
+
+  - name: ami-test
+    jobs:
+      - apply-and-test-with-ami
   
   - name: update-pipeline
     jobs:

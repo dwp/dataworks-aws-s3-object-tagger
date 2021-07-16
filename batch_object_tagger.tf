@@ -162,3 +162,29 @@ resource "aws_batch_job_definition" "s3_object_tagger" {
   }
   CONTAINER_PROPERTIES
 }
+
+resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
+  name = "s3_object_tagger_test_ami_job"
+  type = "container"
+
+  container_properties = <<CONTAINER_PROPERTIES
+  {
+      "image": "${local.s3_object_tagger_image}",
+      "image": "${data.terraform_remote_state.management.outputs.ecr_awscli_url}",
+      "jobRoleArn" : "${aws_iam_role.s3_object_tagger.arn}",
+      "memory": 1024,
+      "vcpus": 2,
+      "environment": [
+          {"name": "LOG_LEVEL", "value": "INFO"},
+          {"name": "AWS_DEFAULT_REGION", "value": "eu-west-2"}
+      ],
+      "ulimits": [
+        {
+          "hardLimit": 1024,
+          "name": "nofile",
+          "softLimit": 1024
+        }
+      ]
+  }
+  CONTAINER_PROPERTIES
+}
