@@ -95,26 +95,49 @@ meta:
             - |
               export AWS_DEFAULT_REGION
               source /assume-role
-              set +x
-              max_retries=5
-              task_json="$(aws ecs run-task --cluster "$CLUSTER_NAME" --task-definition ami_ecs_test_td --overrides "{\"containerOverrides\": [{\"name\": \"test-ecs-ami\", \"command\": [\"sh\", \"-c\", \"sleep 300\"]}]}")"
-              task_arn=$(echo $task_json | jq -r '.tasks[0].taskArn')
+              set -x
+              max_retries=10
+              AMI=$(cat dw-al2-ecs-ami/id)
+              CEs="$(aws batch describe-compute-environments)"
+
+              case "$AMI" in
+              *$CEs*) echo compute environment using the latest image as expected ;;
+              *     ) echo compute environment is not using the latest image; exit 1;; esac
+
+
+              CEs=$(aws batch describe-compute-environments --query 'computeEnvironments[]' | jq -r --arg AMI "$AMI" '.[] | select(.computeResources.imageId=='\"$AMI\"') | .computeEnvironmentName')
+
+              CE="$(echo $CEs | grep -o -e $COMPUTE_ENV_PREFIX'[a-zA-Z0-9_-]*')"
+
+              job_queues=$(aws batch describe-job-queues --query 'jobQueues[].jobQueueName')
+
+              case "s3tagger_amitest" in
+              *$job_queues*) echo queue present ;;
+              *       ) echo not presnt; aws batch create-job-queue --compute-environment-order "{\"order\": 1, \"computeEnvironment\": \"$CE\"}" --job-queue-name s3tagger_amitest --priority 10 ;; esac
+
+              aws batch register-job-definition --job-definition-name amitest --type container --container-properties "{\"image\": \"busybox\",\"vcpus\": 1, \"memory\": 64,\"command\": [\"sh\", \"-c\", \"sleep 30\"] }"
+
+              job_id=$(aws batch submit-job --job-name s3_object_tagger_test_ami_job --job-definition s3_object_tagger_test_ami_job --job-queue amitest | jq -r '.jobId')
+
               while [ $max_retries > 0 ]
               do
-                sleep 15
-                task_json="$(aws ecs describe-tasks --cluster "$CLUSTER_NAME" --tasks $task_arn)"
-                container_status="$(echo "$task_json" | jq -r '.tasks[0].containers[0].lastStatus')"
-                if [ "$container_status" == "RUNNING" ]; then
+                sleep 40
+
+                job_status="$(aws batch describe-jobs --jobs $job_id | jq -r '.jobs[0].status')"
+                if [ "$job_status" == "SUCCEEDED" ]; then
                   exit 0
                 fi
                 let "max_retries-=1"
               done
               exit 1
+        inputs:
+          - name: dw-al2-ecs-ami
       params:
         AWS_DEFAULT_REGION: ((dataworks.aws_region))
         AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
-        CLUSTER_NAME: data-egress
-        CAPACITY_PROVIDER: data-egress-cluster
+        COMPUTE_ENV_PREFIX: s3_object_tagger_
+
+
     ami-test-results:
       task: ami-test-result
       config:

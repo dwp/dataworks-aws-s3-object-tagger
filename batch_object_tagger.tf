@@ -172,7 +172,7 @@ resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
       "image": "${local.s3_object_tagger_image}",
       "image": "${data.terraform_remote_state.management.outputs.ecr_awscli_url}",
       "jobRoleArn" : "${aws_iam_role.s3_object_tagger.arn}",
-      "memory": 1024,
+      "memory": 128,
       "vcpus": 2,
       "environment": [
           {"name": "LOG_LEVEL", "value": "INFO"},

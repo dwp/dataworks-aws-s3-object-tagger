@@ -1,7 +1,7 @@
 jobs:
   - name: apply-and-test-with-ami
     max_in_flight: 1
-    serial_groups: [qa-applies]
+    serial_groups: [development-applies]
     plan:
       - in_parallel:
           - put: meta
@@ -11,21 +11,11 @@ jobs:
             trigger: true
           - get: dataworks-aws-s3-object-tagger
             passed:
-              - qa
+              - development
       - .: (( inject meta.plan.terraform-bootstrap ))
         config:
           params:
-            AWS_ACC: ((aws_account.qa))
-      - .: (( inject meta.plan.terraform-apply ))
-        config:
-          params:
-            TF_WORKSPACE: qa
-            TEST_AMI_RUN: true
-      - .: (( inject meta.plan.terraform-plan ))
-        config:
-          params:
-            TF_WORKSPACE: qa
-            TEST_AMI_RUN: true
+            AWS_ACC: ((aws_account.development))
       - .: (( inject meta.plan.test-ecs-ami ))
     on_failure:
       do:
