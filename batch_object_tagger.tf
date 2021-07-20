@@ -168,9 +168,9 @@ resource "aws_batch_job_definition" "s3_object_tagger" {
 }
 
 resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
+  count = local.environment == 'qa' ? 1 : 0
   name = "s3_object_tagger_test_ami_job"
   type = "container"
-
   container_properties = <<CONTAINER_PROPERTIES
   {
       "image": "${local.s3_object_tagger_image}",
@@ -194,6 +194,7 @@ resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
 }
 
 resource "aws_batch_job_queue" "s3_object_tagger_test_ami" {
+  count = local.environment == 'qa' ? 1 : 0
   compute_environments = [aws_batch_compute_environment.s3_object_tagger_batch.arn]
   name                 = "amitest_s3tagger"
   priority             = 10
