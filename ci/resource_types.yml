@@ -16,4 +16,3 @@ resource_types:
     source:
       repository: olhtbr/metadata-resource
       tag: 2.0.1
-
