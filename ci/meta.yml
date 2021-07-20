@@ -112,7 +112,7 @@ meta:
               job_id=$(aws batch submit-job --job-name s3_object_tagger_test_ami_job \
               --job-definition s3_object_tagger_test_ami_job --job-queue amitest_s3tagger | jq -r '.jobId')
 
-              times_retried = 1
+              times_retried=1
               while [ $times_retried -le $max_retries ]
               do
                 sleep 60
