@@ -1,37 +1,21 @@
-output "pdm_object_tagger_batch" {
-  value = {
-    job_queue      = aws_batch_job_queue.pdm_object_tagger
-    job_definition = aws_batch_job_definition.s3_object_tagger
-  }
-}
-
-output "clive_object_tagger_batch" {
-  value = {
-    job_queue      = aws_batch_job_queue.clive_object_tagger
-    job_definition = aws_batch_job_definition.s3_object_tagger
-  }
-}
-
-output "pt_object_tagger_batch" {
-  value = {
-    job_queue      = aws_batch_job_queue.pt_object_tagger
-    job_definition = aws_batch_job_definition.s3_object_tagger
-  }
-}
-
-output "uc_feature_object_tagger_batch" {
-  value = {
-    job_queue      = aws_batch_job_queue.uc_feature_object_tagger
-    job_definition = aws_batch_job_definition.s3_object_tagger
-  }
-}
-
 output "s3_object_tagger_batch" {
   value = {
-    clive_job_queue = aws_batch_job_queue.clive_object_tagger
-    pdm_job_queue   = aws_batch_job_queue.pdm_object_tagger
-    pt_job_queue    = aws_batch_job_queue.pt_object_tagger
-    job_definition  = aws_batch_job_definition.s3_object_tagger
+    clive_job_queue = {
+        arn = aws_batch_job_queue.clive_object_tagger.arn
+    }
+    pdm_job_queue   = {
+        arn = aws_batch_job_queue.pdm_object_tagger.arn
+    }
+    pt_job_queue    = {
+        arn = aws_batch_job_queue.pt_object_tagger.arn
+    }
+    uc_feature_job_queue   = {
+        arn = aws_batch_job_queue.uc_feature_object_tagger.arn
+    }
+    job_definition  = {
+        id   = aws_batch_job_definition.s3_object_tagger.id
+        name = aws_batch_job_definition.s3_object_tagger.name
+    }
   }
 }
 

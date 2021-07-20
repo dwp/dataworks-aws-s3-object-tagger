@@ -25,5 +25,5 @@ jobs:
             - name: dataworks-aws-s3-object-tagger
           outputs:
             - name: pipeline
-      - set_pipeline: dataworks-s3-object-tagger-infra
+      - set_pipeline: s3-object-tagger-infra
         file: pipeline/aviator_pipeline.yml
