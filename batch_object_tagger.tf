@@ -188,3 +188,10 @@ resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
   }
   CONTAINER_PROPERTIES
 }
+
+resource "aws_batch_job_queue" "s3_object_tagger_test_ami" {
+  compute_environments = [aws_batch_compute_environment.s3_object_tagger_batch.arn]
+  name                 = "amitest_s3tagger"
+  priority             = 10
+  state                = "ENABLED"
+}

@@ -1,6 +1,5 @@
 jobs:
   - name: development
-    serial_groups: [ development-applies ]
     max_in_flight: 1
     plan:
       - get: dataworks-aws-s3-object-tagger
@@ -10,8 +9,4 @@ jobs:
       - .: (( inject meta.plan.terraform-bootstrap ))
       - .: (( inject meta.plan.terraform-apply ))
       - .: (( inject meta.plan.terraform-plan ))
-        params:
-          TF_WORKSPACE: 'default'
-      - .: (( inject meta.plan.terraform-plan ))
-        params:
-          TF_WORKSPACE: 'default'
+

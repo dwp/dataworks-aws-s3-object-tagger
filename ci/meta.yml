@@ -96,33 +96,25 @@ meta:
               export AWS_DEFAULT_REGION
               source /assume-role
               set -x
-              max_retries=10
-              AMI=$(cat dw-al2-ecs-ami/id)
+              max_retries=15
+              AMI="$(cat dw-al2-ecs-ami/id)"
               CEs="$(aws batch describe-compute-environments)"
 
-              case "$AMI" in
-              *$CEs*) echo compute environment using the latest image as expected ;;
-              *     ) echo compute environment is not using the latest image; exit 1;; esac
+              if echo $CEs | grep -q $AMI; then echo "Compute environment is using the expected ami";
+              else echo "No compute environment is associated with the AMI to be tested"; exit 1;
+              fi
 
-
-              CEs=$(aws batch describe-compute-environments --query 'computeEnvironments[]' | jq -r --arg AMI "$AMI" '.[] | select(.computeResources.imageId=='\"$AMI\"') | .computeEnvironmentName')
+              CEs=$(aws batch describe-compute-environments --query 'computeEnvironments[]' \
+              | jq -r --arg AMI "$AMI" '.[] | select(.computeResources.imageId=='\"$AMI\"') | .computeEnvironmentName')
 
               CE="$(echo $CEs | grep -o -e $COMPUTE_ENV_PREFIX'[a-zA-Z0-9_-]*')"
 
-              job_queues=$(aws batch describe-job-queues --query 'jobQueues[].jobQueueName')
-
-              case "s3tagger_amitest" in
-              *$job_queues*) echo queue present ;;
-              *       ) echo not presnt; aws batch create-job-queue --compute-environment-order "{\"order\": 1, \"computeEnvironment\": \"$CE\"}" --job-queue-name s3tagger_amitest --priority 10 ;; esac
-
-              aws batch register-job-definition --job-definition-name amitest --type container --container-properties "{\"image\": \"busybox\",\"vcpus\": 1, \"memory\": 64,\"command\": [\"sh\", \"-c\", \"sleep 30\"] }"
-
-              job_id=$(aws batch submit-job --job-name s3_object_tagger_test_ami_job --job-definition s3_object_tagger_test_ami_job --job-queue amitest | jq -r '.jobId')
+              job_id=$(aws batch submit-job --job-name s3_object_tagger_test_ami_job \
+              --job-definition s3_object_tagger_test_ami_job --job-queue amitest_s3tagger | jq -r '.jobId')
 
               while [ $max_retries > 0 ]
               do
-                sleep 40
-
+                sleep 20
                 job_status="$(aws batch describe-jobs --jobs $job_id | jq -r '.jobs[0].status')"
                 if [ "$job_status" == "SUCCEEDED" ]; then
                   exit 0
@@ -134,7 +126,7 @@ meta:
           - name: dw-al2-ecs-ami
       params:
         AWS_DEFAULT_REGION: ((dataworks.aws_region))
-        AWS_ROLE_ARN: arn:aws:iam::((aws_account.development)):role/ci
+        AWS_ROLE_ARN: arn:aws:iam::((aws_account.qa)):role/ci
         COMPUTE_ENV_PREFIX: s3_object_tagger_
 
 
