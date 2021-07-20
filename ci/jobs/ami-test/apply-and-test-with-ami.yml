@@ -12,20 +12,30 @@ jobs:
           - get: dataworks-aws-s3-object-tagger
             passed:
               - qa
+            trigger: true
+      - .: (( inject meta.plan.check-ami-test-results ))
+        input_mapping:
+          untested_ami: dw-al2-ecs-ami
       - .: (( inject meta.plan.terraform-bootstrap ))
         config:
           params:
             AWS_ACC: ((aws_account.qa))
+          inputs:
+            - name: previous_success
       - .: (( inject meta.plan.terraform-apply ))
         config:
           params:
             TF_WORKSPACE: qa
             TEST_AMI_RUN: true
+          inputs:
+            - name: previous_success
       - .: (( inject meta.plan.terraform-plan ))
         config:
           params:
             TF_WORKSPACE: qa
             TEST_AMI_RUN: true
+          inputs:
+            - name: previous_success
       - .: (( inject meta.plan.test-ecs-ami ))
     on_failure:
       do:
