@@ -1,20 +1,20 @@
 output "s3_object_tagger_batch" {
   value = {
     clive_job_queue = {
-        arn = aws_batch_job_queue.clive_object_tagger.arn
+      arn = aws_batch_job_queue.clive_object_tagger.arn
     }
-    pdm_job_queue   = {
-        arn = aws_batch_job_queue.pdm_object_tagger.arn
+    pdm_job_queue = {
+      arn = aws_batch_job_queue.pdm_object_tagger.arn
     }
-    pt_job_queue    = {
-        arn = aws_batch_job_queue.pt_object_tagger.arn
+    pt_job_queue = {
+      arn = aws_batch_job_queue.pt_object_tagger.arn
     }
-    uc_feature_job_queue   = {
-        arn = aws_batch_job_queue.uc_feature_object_tagger.arn
+    uc_feature_job_queue = {
+      arn = aws_batch_job_queue.uc_feature_object_tagger.arn
     }
-    job_definition  = {
-        id   = aws_batch_job_definition.s3_object_tagger.id
-        name = aws_batch_job_definition.s3_object_tagger.name
+    job_definition = {
+      id   = aws_batch_job_definition.s3_object_tagger.id
+      name = aws_batch_job_definition.s3_object_tagger.name
     }
   }
 }

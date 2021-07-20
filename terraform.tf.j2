@@ -46,6 +46,16 @@ locals {
           {{ key }} = "{{ value }}"{% endfor %}
       } {%- endfor %}
   }
+
+  slave_peerings = {
+     management-dev = "management-dev"
+     management     = "management"
+     development    = "management-dev"
+     qa             = "management-dev"
+     integration    = "management-dev"
+     preprod        = "management"
+     production     = "management"
+  }
 }
 
 data "terraform_remote_state" "common" {
@@ -97,6 +107,20 @@ data "terraform_remote_state" "security_tools" {
   config = {
     bucket         = "{{terraform.state_file_bucket}}"
     key            = "terraform/dataworks/aws-security-tools.tfstate"
+    region         = "{{terraform.state_file_region}}"
+    encrypt        = true
+    kms_key_id     = "arn:aws:kms:{{terraform.state_file_region}}:{{terraform.state_file_account}}:key/{{terraform.state_file_kms_key}}"
+    dynamodb_table = "remote_state_locks"
+  }
+}
+
+data "terraform_remote_state" "management" {
+  backend   = "s3"
+  workspace = lookup(local.slave_peerings, local.environment) == "management-dev" ? "default" : "management"
+
+  config = {
+    bucket         = "{{terraform.state_file_bucket}}"
+    key            = "terraform/dataworks/management.tfstate"
     region         = "{{terraform.state_file_region}}"
     encrypt        = true
     kms_key_id     = "arn:aws:kms:{{terraform.state_file_region}}:{{terraform.state_file_account}}:key/{{terraform.state_file_kms_key}}"
