@@ -47,15 +47,15 @@ locals {
       } {%- endfor %}
   }
 
-   slave_peerings = {
-      management-dev = "management-dev"
-      management     = "management"
-      development    = "management-dev"
-      qa             = "management-dev"
-      integration    = "management-dev"
-      preprod        = "management"
-      production     = "management"
-   }
+  slave_peerings = {
+     management-dev = "management-dev"
+     management     = "management"
+     development    = "management-dev"
+     qa             = "management-dev"
+     integration    = "management-dev"
+     preprod        = "management"
+     production     = "management"
+  }
 }
 
 data "terraform_remote_state" "common" {
