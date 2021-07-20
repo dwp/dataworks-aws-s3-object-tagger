@@ -114,7 +114,7 @@ meta:
 
               while [ $max_retries > 0 ]
               do
-                sleep 20
+                sleep 60
                 job_status="$(aws batch describe-jobs --jobs $job_id | jq -r '.jobs[0].status')"
                 if [ "$job_status" == "SUCCEEDED" ]; then
                   exit 0
