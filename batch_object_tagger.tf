@@ -108,7 +108,7 @@ resource "aws_batch_job_queue" "pdm_object_tagger" {
   name                 = "pdm_object_tagger"
   priority             = 10
   state                = "ENABLED"
-  tags                 = merge({"Name": "pdm_object_tagger_queue"}, local.common_tags)
+  tags                 = merge({ "Name" : "pdm_object_tagger_queue" }, local.common_tags)
 }
 
 resource "aws_batch_job_queue" "clive_object_tagger" {
@@ -117,7 +117,7 @@ resource "aws_batch_job_queue" "clive_object_tagger" {
   name                 = "clive_object_tagger"
   priority             = 10
   state                = "ENABLED"
-  tags                 = merge({"Name": "clive_object_tagger_queue"}, local.common_tags)
+  tags                 = merge({ "Name" : "clive_object_tagger_queue" }, local.common_tags)
 }
 
 resource "aws_batch_job_queue" "pt_object_tagger" {
@@ -126,7 +126,7 @@ resource "aws_batch_job_queue" "pt_object_tagger" {
   name                 = "pt_object_tagger"
   priority             = 10
   state                = "ENABLED"
-  tags                 = merge({"Name": "pt_object_tagger_queue"}, local.common_tags)
+  tags                 = merge({ "Name" : "pt_object_tagger_queue" }, local.common_tags)
 }
 
 resource "aws_batch_job_queue" "uc_feature_object_tagger" {
@@ -135,7 +135,7 @@ resource "aws_batch_job_queue" "uc_feature_object_tagger" {
   name                 = "uc_feature_object_tagger"
   priority             = 10
   state                = "ENABLED"
-  tags                 = merge({"Name": "uc_feature_object_tagger_queue"}, local.common_tags)
+  tags                 = merge({ "Name" : "uc_feature_object_tagger_queue" }, local.common_tags)
 }
 
 resource "aws_batch_job_definition" "s3_object_tagger" {
@@ -168,9 +168,9 @@ resource "aws_batch_job_definition" "s3_object_tagger" {
 }
 
 resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
-  count = local.environment == 'qa' ? 1 : 0
-  name = "s3_object_tagger_test_ami_job"
-  type = "container"
+  count                = local.environment == "qa" ? 1 : 0
+  name                 = "s3_object_tagger_test_ami_job"
+  type                 = "container"
   container_properties = <<CONTAINER_PROPERTIES
   {
       "image": "${local.s3_object_tagger_image}",
@@ -194,7 +194,7 @@ resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
 }
 
 resource "aws_batch_job_queue" "s3_object_tagger_test_ami" {
-  count = local.environment == 'qa' ? 1 : 0
+  count                = local.environment == "qa" ? 1 : 0
   compute_environments = [aws_batch_compute_environment.s3_object_tagger_batch.arn]
   name                 = "amitest_s3tagger"
   priority             = 10
