@@ -15,8 +15,6 @@ spruce:
         regexp: ".*yml"
       - with_in: ci/utility/jobs/tag-clive/
         regexp: ".*yml"
-      - with_in: ci/utility/jobs/tag-uc-feature/
-        regexp: ".*yml"
     to: aviator_pipeline_object_tagging.yml
 fly:
   name: object-tagging
