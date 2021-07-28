@@ -9,9 +9,6 @@ output "s3_object_tagger_batch" {
     pt_job_queue = {
       arn = aws_batch_job_queue.pt_object_tagger.arn
     }
-    uc_feature_job_queue = {
-      arn = aws_batch_job_queue.uc_feature_object_tagger.arn
-    }
     job_definition = {
       id   = aws_batch_job_definition.s3_object_tagger.id
       name = aws_batch_job_definition.s3_object_tagger.name
@@ -40,14 +37,6 @@ output "clive_object_tagger_data_classification" {
     config_prefix  = local.config_prefix
     config_file    = local.config_filename
     data_s3_prefix = local.clive_s3_prefix
-  }
-}
-
-output "uc_feature_object_tagger_data_classification" {
-  value = {
-    config_prefix  = local.config_prefix
-    config_file    = local.config_filename
-    data_s3_prefix = local.uc_feature_s3_prefix
   }
 }
 
