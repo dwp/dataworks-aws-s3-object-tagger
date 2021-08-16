@@ -138,7 +138,7 @@ resource "aws_batch_job_definition" "s3_object_tagger" {
       "command": ["--data-s3-prefix", "Ref::data-s3-prefix", "--csv-location", "Ref::csv-location"],
       "image": "${local.s3_object_tagger_image}",
       "jobRoleArn" : "${aws_iam_role.s3_object_tagger.arn}",
-      "memory": 1024,
+      "memory": 10240,
       "vcpus": 2,
       "environment": [
           {"name": "LOG_LEVEL", "value": "INFO"},
