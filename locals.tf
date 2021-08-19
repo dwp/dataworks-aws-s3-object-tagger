@@ -8,7 +8,9 @@ locals {
   s3_object_tagger_application_name = "s3-object-tagger"
   config_prefix                     = "component/rbac"
   config_filename                   = "data_classification.csv"
-  pdm_s3_prefix                     = "data/uc/uc.db"
+
+//  Include trailing slash to prevent S3 listing items outside of destination
+  pdm_s3_prefix                     = "data/uc/"
   pt_s3_prefix                      = "data/uc_payment_timelines"
   clive_s3_prefix                   = "data/uc_clive"
 
