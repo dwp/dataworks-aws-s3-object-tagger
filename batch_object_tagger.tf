@@ -136,7 +136,7 @@ resource "aws_batch_job_definition" "s3_object_tagger" {
   container_properties = <<CONTAINER_PROPERTIES
   {
       "command": ["--data-s3-prefix", "Ref::data-s3-prefix", "--csv-location", "Ref::csv-location"],
-      "image": "${local.s3_object_tagger_image[local.environment]}",
+      "image": "${local.s3_object_tagger_image}",
       "jobRoleArn" : "${aws_iam_role.s3_object_tagger.arn}",
       "memory": 10240,
       "vcpus": 2,
@@ -164,7 +164,7 @@ resource "aws_batch_job_definition" "s3_object_tagger_test_ami" {
   type                 = "container"
   container_properties = <<CONTAINER_PROPERTIES
   {
-      "image": "${local.s3_object_tagger_image[local.environment]}",
+      "image": "${local.s3_object_tagger_image}",
       "image": "${data.terraform_remote_state.management.outputs.ecr_awscli_url}",
       "jobRoleArn" : "${aws_iam_role.s3_object_tagger.arn}",
       "memory": 128,
