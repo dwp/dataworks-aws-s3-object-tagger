@@ -118,7 +118,7 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
     allocation_strategy = "BEST_FIT_PROGRESSIVE"
 
     min_vcpus     = 0
-    desired_vcpus = 10
+    desired_vcpus = local.batch_s3_tagger_compute_environment_desired_cpus[local.environment]
     max_vcpus     = local.batch_s3_tagger_compute_environment_max_cpus[local.environment]
 
     security_group_ids = [local.internal_compute_vpce_security_group_id]

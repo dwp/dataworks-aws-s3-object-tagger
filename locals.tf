@@ -14,6 +14,30 @@ locals {
   pt_s3_prefix                      = "data/uc_payment_timelines"
   clive_s3_prefix                   = "data/uc_clive"
 
+  s3_object_tagger_container_vcpu = {
+    development = 2
+    qa          = 2
+    integration = 2
+    preprod     = 10
+    production  = 2
+  }
+
+  s3_object_tagger_container_memory = {
+    development = 2048
+    qa          = 2048
+    integration = 2048
+    preprod     = 10240
+    production  = 10240
+  }
+
+  batch_s3_tagger_compute_environment_desired_cpus = {
+    development = 10
+    qa          = 10
+    integration = 10
+    preprod     = 10
+    production  = 50
+  }
+
   batch_s3_tagger_compute_environment_max_cpus = {
     development = 100
     qa          = 100
