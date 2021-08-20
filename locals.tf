@@ -19,7 +19,7 @@ locals {
     qa          = 2
     integration = 2
     preprod     = 10
-    production  = 2
+    production  = 50
   }
 
   s3_object_tagger_container_memory = {
