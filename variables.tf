@@ -15,8 +15,8 @@ variable "image_version" {
     s3-object-tagger = {
       development = "0.0.24"
       qa          = "0.0.24"
-      integration = "0.0.23"
-      preprod     = "0.0.23"
+      integration = "0.0.24"
+      preprod     = "0.0.24"
       production  = "0.0.23"
     }
   }
