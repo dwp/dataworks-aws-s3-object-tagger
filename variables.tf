@@ -13,8 +13,8 @@ variable "image_version" {
   description = "Container tag values."
   default = {
     s3-object-tagger = {
-      development = "0.0.23"
-      qa          = "0.0.23"
+      development = "0.0.24"
+      qa          = "0.0.24"
       integration = "0.0.23"
       preprod     = "0.0.23"
       production  = "0.0.23"
