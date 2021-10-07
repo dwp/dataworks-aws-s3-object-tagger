@@ -17,7 +17,7 @@ variable "image_version" {
       qa          = "0.0.24"
       integration = "0.0.24"
       preprod     = "0.0.24"
-      production  = "0.0.23"
+      production  = "0.0.24"
     }
   }
 }
