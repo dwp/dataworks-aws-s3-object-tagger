@@ -31,6 +31,14 @@ groups:
       - clive-object-tagging-preprod
       - clive-object-tagging-production
 
+  - name: uc-feature-object-tagging
+    jobs:
+      - uc-feature-object-tagging-dev
+      - uc-feature-object-tagging-qa
+      - uc-feature-object-tagging-integration
+      - uc-feature-object-tagging-preprod
+      - uc-feature-object-tagging-production
+
   - name: update-pipeline
     jobs:
       - update-pipeline-utility

@@ -13,6 +13,7 @@ locals {
   pdm_s3_prefix                     = "data/uc/"
   pt_s3_prefix                      = "data/uc_payment_timelines"
   clive_s3_prefix                   = "data/uc_clive"
+  uc_feature_s3_prefix              = "data/uc_feature"
 
   s3_object_tagger_container_vcpu = {
     development = 2
