@@ -36,7 +36,7 @@ jobs:
             TEST_AMI_RUN: true
           inputs:
             - name: previous_success
-      - .: (( inject meta.plan.test-ecs-ami ))
+      - .: (( inject meta.plan.test-ecs-ami-2 ))
     on_failure:
       do:
         - .: (( inject meta.plan.ami-test-results ))
@@ -44,6 +44,25 @@ jobs:
           config:
             params:
               RESULT: FAILED
+        - get: dw-al2-ecs-ami-restored
+          resource: dw-al2-ecs-ami
+          trigger: false
+        - .: (( inject meta.plan.terraform-bootstrap ))
+          config:
+            params:
+              AWS_ACC: ((aws_account.qa))
+        - .: (( inject meta.plan.terraform-apply ))
+          config:
+            params:
+              TF_WORKSPACE: qa
+          input_mapping:
+            dw-al2-ecs-ami: dw-al2-ecs-ami-restored
+        - .: (( inject meta.plan.terraform-plan ))
+          config:
+            params:
+              TF_WORKSPACE: qa
+          input_mapping:
+            dw-al2-ecs-ami: dw-al2-ecs-ami-restored
     on_success:
       do:
         - .: (( inject meta.plan.ami-test-results ))
