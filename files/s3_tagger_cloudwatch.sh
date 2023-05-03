@@ -158,7 +158,7 @@ cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<CWAGEN
             "timezone": "UTC"
           },
           {
-            "file_path": "/var/log/s3_tagger/ingestion.out",
+            "file_path": "/var/log/s3_tagger/s3_tagger.out",
             "log_group_name": "${cwa_log_group_name}",
             "log_stream_name": "s3_tagger.out",
             "timezone": "UTC"
