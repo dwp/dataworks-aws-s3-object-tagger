@@ -150,3 +150,5 @@ data "terraform_remote_state" "management" {
     dynamodb_table = "remote_state_locks"
   }
 }
+
+data "aws_region" "current" {}
