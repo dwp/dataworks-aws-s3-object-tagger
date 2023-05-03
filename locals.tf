@@ -9,6 +9,15 @@ locals {
   config_prefix                     = "component/rbac"
   config_filename                   = "data_classification.csv"
 
+  cw_agent_namespace_s3_tagger_ecs                      = "/app/${local.s3_object_tagger_application_name}"
+  cw_agent_log_group_name_s3_tagger_ecs                 = "/app/${local.s3_object_tagger_application_name}"
+  cw_agent_metrics_collection_interval                  = 60
+  cw_agent_cpu_metrics_collection_interval              = 60
+  cw_agent_disk_measurement_metrics_collection_interval = 60
+  cw_agent_disk_io_metrics_collection_interval          = 60
+  cw_agent_mem_metrics_collection_interval              = 60
+  cw_agent_netstat_metrics_collection_interval          = 60
+
   //  Include trailing slash to prevent S3 listing items outside of destination
   pdm_s3_prefix        = "data/uc/"
   pt_s3_prefix         = "data/uc_payment_timelines"
@@ -45,5 +54,21 @@ locals {
     integration = 100
     preprod     = 100
     production  = 650
+  }
+
+  s3_tagger_ecs_cluster_asg_autoshutdown = {
+    development = "False"
+    qa          = "False"
+    integration = "False"
+    preprod     = "False"
+    production  = "False"
+  }
+
+  s3_tagger_ecs_cluster_asg_ssmenabled = {
+    development = "True"
+    qa          = "True"
+    integration = "True"
+    preprod     = "False"
+    production  = "False"
   }
 }

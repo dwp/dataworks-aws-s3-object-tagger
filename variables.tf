@@ -23,3 +23,9 @@ variable "image_version" {
 }
 
 variable "ecs_hardened_ami_id" {}
+
+variable "proxy_port" {
+  description = "proxy port"
+  type        = string
+  default     = "3128"
+}

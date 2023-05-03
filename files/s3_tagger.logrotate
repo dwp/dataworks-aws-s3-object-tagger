@@ -1,0 +1,9 @@
+/var/log/s3_tagger/s3_tagger.out {
+    copytruncate
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    daily
+    create 0640 s3_tagger dip_export
+}
