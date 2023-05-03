@@ -187,6 +187,11 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
     subnets            = local.internal_compute_subnets.ids
     type               = "EC2"
 
+    launch_template {
+      launch_template_id      = aws_launch_template.s3_tagger_ecs_cluster.id
+      version                 = "$Latest"
+    }
+
     tags = merge(
       local.common_tags,
       {
@@ -195,11 +200,6 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
         AutoShutdown = "False",
       }
     )
-  }
-
-  launch_template {
-    id      = aws_launch_template.s3_tagger_ecs_cluster.id
-    version = "$Latest"
   }
 
   lifecycle {
