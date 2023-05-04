@@ -84,7 +84,7 @@ data "aws_iam_policy_document" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk
       "logs:PutLogEvents",
       "logs:DescribeLogStreams"
     ]
-    resources = data.terraform_remote_state.common.outputs.ami_ecs_test_services ? [aws_cloudwatch_log_group.s3_tagger_ecs_cluster.arn, data.terraform_remote_state.common.outputs.ami_ecs_test_log_group_arn] : [aws_cloudwatch_log_group.s3_tagger_ecs_cluster.arn]
+    resources = [aws_cloudwatch_log_group.s3_tagger_ecs_cluster.arn] #data.terraform_remote_state.common.outputs.ami_ecs_test_services ? [aws_cloudwatch_log_group.s3_tagger_ecs_cluster.arn, data.terraform_remote_state.common.outputs.ami_ecs_test_log_group_arn] : [aws_cloudwatch_log_group.s3_tagger_ecs_cluster.arn]
   }
 
   statement {
@@ -121,6 +121,7 @@ data "aws_iam_policy_document" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk
   }
 
 }
+
 
 resource "aws_cloudwatch_log_group" "s3_tagger_ecs_cluster" {
   name              = local.cw_agent_log_group_name_s3_tagger_ecs
@@ -237,16 +238,7 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
 
 
 resource "aws_launch_template" "s3_tagger_ecs_cluster" {
-  /* name          = local.s3_object_tagger_application_name */
-
-  /* network_interfaces {
-    associate_public_ip_address = false
-    delete_on_termination       = true
-
-    security_groups = [
-      local.internal_compute_vpce_security_group_id
-    ]
-  } */
+  name      = local.s3_object_tagger_application_name
 
   user_data = base64encode(templatefile("files/userdata.tpl", {
     region                                           = data.aws_region.current.name
@@ -275,15 +267,6 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.ecs_instance_role_s3_object_tagger_batch.arn
   }
-
-  /* block_device_mappings {
-    device_name = "/dev/xvda"
-
-    ebs {
-      delete_on_termination = true
-      encrypted             = true
-    }
-  } */
 
   lifecycle {
     create_before_destroy = true
