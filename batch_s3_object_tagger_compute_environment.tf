@@ -259,14 +259,14 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
     arn = aws_iam_instance_profile.ecs_instance_role_s3_object_tagger_batch.arn
   }
 
-  block_device_mappings {
+  /* block_device_mappings {
     device_name = "/dev/xvda"
 
     ebs {
       delete_on_termination = true
       encrypted             = true
     }
-  }
+  } */
 
   lifecycle {
     create_before_destroy = true
