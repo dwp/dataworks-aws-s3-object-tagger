@@ -222,14 +222,14 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
 resource "aws_launch_template" "s3_tagger_ecs_cluster" {
   name          = local.s3_object_tagger_application_name
 
-  network_interfaces {
+  /* network_interfaces {
     associate_public_ip_address = false
     delete_on_termination       = true
 
     security_groups = [
       local.internal_compute_vpce_security_group_id
     ]
-  }
+  } */
 
   user_data = base64encode(templatefile("files/userdata.tpl", {
     region                                           = data.aws_region.current.name
