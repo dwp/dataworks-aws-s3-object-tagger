@@ -4,6 +4,11 @@ data "aws_iam_role" "aws_batch_service_role" {
 
 # AWS Batch Instance IAM role & profile
 
+resource "aws_iam_role_policy_attachment" "s3_tagger_ecs_cwasp" {
+  role       = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
 resource "aws_iam_role_policy_attachment" "ec2_for_ssm_attachment" {
   role       = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
