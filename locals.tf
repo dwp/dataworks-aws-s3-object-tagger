@@ -1,4 +1,11 @@
 locals {
+
+  current_timestamp  = timestamp()
+  current_day        = formatdate("YYYY-MM-DD", local.current_timestamp)
+  current_time       = formatdate("hh-mm-ss", local.current_timestamp)
+
+  batch_env_name     = "${local.s3_object_tagger_application_name}-${local.current_day}-${local.current_time}"
+
   internal_compute_vpc_prefix_list_ids_s3 = data.terraform_remote_state.internal_compute.outputs.vpc.vpc.prefix_list_ids.s3
   internal_compute_subnets                = data.terraform_remote_state.internal_compute.outputs.compute_environment_subnet
   internal_compute_vpc_id                 = data.terraform_remote_state.internal_compute.outputs.vpc.vpc.vpc.id

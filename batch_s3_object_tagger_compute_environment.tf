@@ -168,12 +168,8 @@ resource "aws_security_group_rule" "s3_object_tagger_ingress_internet_proxy" {
   security_group_id        = data.terraform_remote_state.internal_compute.outputs.internet_proxy.sg
 }
 
-resource "random_id" "aws_batch_compute_environment" {
-  byte_length = 16
-}
-
 resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
-  compute_environment_name        = "${local.s3_object_tagger_application_name}-${random_id.aws_batch_compute_environment.hex}"
+  compute_environment_name        = local.batch_env_name
   service_role                    = data.aws_iam_role.aws_batch_service_role.arn
   type                            = "MANAGED"
 
@@ -226,7 +222,7 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
   }
 
   user_data = base64encode(templatefile("files/userdata.tpl", {
-    cluster_name                                     = "${local.s3_object_tagger_application_name}-${random_id.aws_batch_compute_environment.hex}" # Referencing the cluster resource causes a circular dependency
+    cluster_name                                     = local.batch_env_name# Referencing the cluster resource causes a circular dependency
     region                                           = data.aws_region.current.name
     name                                             = local.s3_object_tagger_application_name
     proxy_port                                       = var.proxy_port
