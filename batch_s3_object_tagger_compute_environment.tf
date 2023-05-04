@@ -199,7 +199,7 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
 
     launch_template {
       launch_template_id      = aws_launch_template.s3_tagger_ecs_cluster.id
-      version                 = "$Latest"
+      version                 = aws_launch_template.s3_tagger_ecs_cluster.latest_version
     }
 
     tags = merge(
