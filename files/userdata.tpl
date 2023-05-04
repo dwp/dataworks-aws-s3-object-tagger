@@ -6,7 +6,6 @@ MIME-Version: 1.0
 Content-Type: text/x-shellscript; charset="us-ascii"
 
 #!/bin/bash
-echo ECS_CLUSTER=s3_object_tagger_batch"$(aws ecs list-clusters --region eu-west-2 --output text | grep -Po 's3_object_tagger_batch\K.*')" >> /etc/ecs/ecs.config
 echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config
 
 # rename ec2 instance to be unique

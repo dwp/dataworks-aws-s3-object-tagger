@@ -233,7 +233,7 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
 
   user_data = base64encode(templatefile("files/userdata.tpl", {
     region                                           = data.aws_region.current.name
-    name                                             = local.s3_object_tagger_application_name
+    /* name                                             = local.s3_object_tagger_application_name */
     proxy_port                                       = var.proxy_port
     proxy_host                                       = data.terraform_remote_state.internal_compute.outputs.internet_proxy.host
     hcs_environment                                  = local.hcs_environment[local.environment]
