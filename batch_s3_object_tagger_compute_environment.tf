@@ -100,7 +100,7 @@ data "aws_iam_policy_document" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk
     actions = [
       "ecs:ListClusters",
     ]
-    resources = "*"
+    resources = ["*"]
   }
 
 }
