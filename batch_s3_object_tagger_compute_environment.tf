@@ -93,6 +93,16 @@ data "aws_iam_policy_document" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk
     resources = ["arn:aws:ec2:${var.region}:${local.account[local.environment]}:instance/*"]
   }
 
+  statement {
+    sid    = "ECSListClusters"
+    effect = "Allow"
+
+    actions = [
+      "ecs:ListClusters",
+    ]
+    resources = "*"
+  }
+
 }
 
 resource "aws_cloudwatch_log_group" "s3_tagger_ecs_cluster" {
@@ -169,7 +179,7 @@ resource "aws_security_group_rule" "s3_object_tagger_ingress_internet_proxy" {
 }
 
 resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
-  compute_environment_name        = local.batch_env_name
+  compute_environment_name_prefix = "s3_object_tagger_batch"
   service_role                    = data.aws_iam_role.aws_batch_service_role.arn
   type                            = "MANAGED"
 
@@ -222,7 +232,6 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
   }
 
   user_data = base64encode(templatefile("files/userdata.tpl", {
-    cluster_name                                     = local.batch_env_name# Referencing the cluster resource causes a circular dependency
     region                                           = data.aws_region.current.name
     name                                             = local.s3_object_tagger_application_name
     proxy_port                                       = var.proxy_port

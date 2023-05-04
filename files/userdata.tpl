@@ -1,5 +1,5 @@
 #!/bin/bash
-echo ECS_CLUSTER=${cluster_name} >> /etc/ecs/ecs.config
+echo ECS_CLUSTER=s3_object_tagger_batch"$(aws ecs list-clusters --region eu-west-2 --output text | grep -Po 's3_object_tagger_batch\K.*')" >> /etc/ecs/ecs.config
 echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config
 
 # rename ec2 instance to be unique
