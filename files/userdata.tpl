@@ -1,3 +1,10 @@
+Content-Type: multipart/mixed; boundary="==BOUNDARY==" 
+MIME-Version: 1.0 
+
+--==BOUNDARY==
+MIME-Version: 1.0 
+Content-Type: text/x-shellscript; charset="us-ascii"
+
 #!/bin/bash
 echo ECS_CLUSTER=s3_object_tagger_batch"$(aws ecs list-clusters --region eu-west-2 --output text | grep -Po 's3_object_tagger_batch\K.*')" >> /etc/ecs/ecs.config
 echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config
@@ -45,3 +52,5 @@ useradd s3_tagger -m
 echo "Changing permissions"
 chown s3_tagger:s3_tagger -R  /opt/s3_tagger
 chown s3_tagger:s3_tagger -R  /var/log/s3_tagger
+
+--==BOUNDARY==

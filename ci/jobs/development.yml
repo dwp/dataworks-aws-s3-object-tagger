@@ -4,8 +4,16 @@ jobs:
     plan:
       - get: dataworks-aws-s3-object-tagger
         trigger: true
+      - get: dataworks-aws-s3-object-tagger-dev
+        trigger: true
       - get: dw-al2-ecs-ami
         trigger: true
       - .: (( inject meta.plan.terraform-bootstrap ))
+        input_mapping: 
+          dataworks-aws-s3-object-tagger: dataworks-aws-s3-object-tagger-dev
       - .: (( inject meta.plan.terraform-apply ))
+        input_mapping: 
+          dataworks-aws-s3-object-tagger: dataworks-aws-s3-object-tagger-dev
       - .: (( inject meta.plan.terraform-plan ))
+        input_mapping: 
+          dataworks-aws-s3-object-tagger: dataworks-aws-s3-object-tagger-dev
