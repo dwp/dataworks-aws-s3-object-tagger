@@ -207,7 +207,6 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
   type                            = "MANAGED"
 
   compute_resources {
-    image_id            = var.ecs_hardened_ami_id
     instance_role       = aws_iam_instance_profile.ecs_instance_role_s3_object_tagger_batch.arn
     instance_type       = ["optimal"]
     allocation_strategy = "BEST_FIT_PROGRESSIVE"
@@ -243,7 +242,8 @@ resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
 
 
 resource "aws_launch_template" "s3_tagger_ecs_cluster" {
-  name      = local.s3_object_tagger_application_name
+  name     = local.s3_object_tagger_application_name
+  image_id = var.ecs_hardened_ami_id
 
   user_data = base64encode(templatefile("files/userdata.tpl", {
     region                                           = data.aws_region.current.name
