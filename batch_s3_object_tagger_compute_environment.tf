@@ -4,6 +4,11 @@ data "aws_iam_role" "aws_batch_service_role" {
 
 # AWS Batch Instance IAM role & profile
 
+resource "aws_iam_role_policy_attachment" "ec2_for_ssm_attachment" {
+  role       = aws_iam_role.ecs_instance_role_s3_object_tagger_batch.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 resource "aws_iam_role" "ecs_instance_role_s3_object_tagger_batch" {
   name = "ecs_instance_role_s3_object_tagger_batch"
 
@@ -101,6 +106,18 @@ data "aws_iam_policy_document" "ecs_instance_role_s3_object_tagger_batch_ebs_cmk
       "ecs:ListClusters",
     ]
     resources = ["*"]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "ssm:*",
+    ]
+
+    resources = [
+      "*"
+    ]
   }
 
 }
