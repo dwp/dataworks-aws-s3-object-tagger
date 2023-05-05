@@ -16,15 +16,6 @@ resources:
     webhook_token: ((dataworks.concourse_github_webhook_token))
     check_every: 5m
 
-  - name: dataworks-aws-s3-object-tagger-dev
-    type: git
-    source:
-      branch: DTWRKS-976
-      uri: https://github.com/dwp/dataworks-aws-s3-object-tagger.git
-      access_token: ((dataworks-secrets.concourse_github_pat))
-    webhook_token: ((dataworks.concourse_github_webhook_token))
-    check_every: 5m
-
   - name: dataworks-aws-s3-object-tagger-update-pipeline
     type: git
     source:
