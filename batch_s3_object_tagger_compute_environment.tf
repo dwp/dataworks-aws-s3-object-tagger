@@ -269,14 +269,6 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
 
   instance_initiated_shutdown_behavior = "terminate"
 
-  iam_instance_profile {
-    arn = aws_iam_instance_profile.ecs_instance_role_s3_object_tagger_batch.arn
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
   tags = merge(
     local.common_tags,
     {
