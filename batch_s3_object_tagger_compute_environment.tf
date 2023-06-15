@@ -201,6 +201,46 @@ resource "aws_security_group_rule" "s3_object_tagger_ingress_internet_proxy" {
   security_group_id        = data.terraform_remote_state.internal_compute.outputs.internet_proxy.sg
 }
 
+resource "aws_security_group_rule" "s3_object_tagger_host_outbound_tanium_1" {
+  description       = "S3 Object tagger host outbound port 1 to Tanium"
+  type              = "egress"
+  from_port         = var.tanium_port_1
+  to_port           = var.tanium_port_1
+  protocol          = "tcp"
+  prefix_list_ids   = local.tanium_prefix[local.environment]
+  security_group_id = local.internal_compute_vpce_security_group_id
+}
+
+resource "aws_security_group_rule" "s3_object_tagger_host_outbound_tanium_2" {
+  description       = "S3 Object tagger host outbound port 2 to Tanium"
+  type              = "egress"
+  from_port         = var.tanium_port_2
+  to_port           = var.tanium_port_2
+  protocol          = "tcp"
+  prefix_list_ids   = local.tanium_prefix[local.environment]
+  security_group_id = local.internal_compute_vpce_security_group_id
+}
+
+resource "aws_security_group_rule" "s3_object_tagger_host_inbound_tanium_1" {
+  description       = "S3 Object tagger host inbound port 1 from Tanium"
+  type              = "ingress"
+  from_port         = var.tanium_port_1
+  to_port           = var.tanium_port_1
+  protocol          = "tcp"
+  prefix_list_ids   = local.tanium_prefix[local.environment]
+  security_group_id = local.internal_compute_vpce_security_group_id
+}
+
+resource "aws_security_group_rule" "s3_object_tagger_host_inbound_tanium_2" {
+  description       = "S3 Object tagger host inbound port 2 from Tanium"
+  type              = "ingress"
+  from_port         = var.tanium_port_2
+  to_port           = var.tanium_port_2
+  protocol          = "tcp"
+  prefix_list_ids   = local.tanium_prefix[local.environment]
+  security_group_id = local.internal_compute_vpce_security_group_id
+}
+
 resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
   compute_environment_name_prefix = "s3_object_tagger_batch"
   service_role                    = data.aws_iam_role.aws_batch_service_role.arn
@@ -264,6 +304,18 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
     cwa_disk_io_metrics_collection_interval          = local.cw_agent_disk_io_metrics_collection_interval
     cwa_mem_metrics_collection_interval              = local.cw_agent_mem_metrics_collection_interval
     cwa_netstat_metrics_collection_interval          = local.cw_agent_netstat_metrics_collection_interval
+    install_tenable                                  = local.tenable_install[local.environment]
+    install_trend                                    = local.trend_install[local.environment]
+    install_tanium                                   = local.tanium_install[local.environment]
+    tanium_server_1                                  = local.tanium1
+    tanium_server_2                                  = local.tanium2
+    tanium_env                                       = local.tanium_env[local.environment]
+    tanium_port                                      = var.tanium_port_1
+    tanium_log_level                                 = local.tanium_log_level[local.environment]
+    tenant                                           = local.tenant
+    tenantid                                         = local.tenantid
+    token                                            = local.token
+    policyid                                         = local.policy_id[local.environment]
 
   }))
 
