@@ -202,43 +202,43 @@ resource "aws_security_group_rule" "s3_object_tagger_ingress_internet_proxy" {
 }
 
 resource "aws_security_group_rule" "s3_object_tagger_host_outbound_tanium_1" {
-  description       = "S3 Object tagger host outbound port 1 to Tanium"
-  type              = "egress"
-  from_port         = var.tanium_port_1
-  to_port           = var.tanium_port_1
-  protocol          = "tcp"
-  prefix_list_ids   = local.tanium_prefix[local.environment]
-  security_group_id = local.internal_compute_vpce_security_group_id
+  description              = "S3 Object tagger host outbound port 1 to Tanium"
+  type                     = "egress"
+  from_port                = var.tanium_port_1
+  to_port                  = var.tanium_port_1
+  protocol                 = "tcp"
+  security_group_id        = local.internal_compute_vpce_security_group_id
+  source_security_group_id = data.terraform_remote_state.internal_compute.outputs.tanium_service_endpoint.sg
 }
 
 resource "aws_security_group_rule" "s3_object_tagger_host_outbound_tanium_2" {
-  description       = "S3 Object tagger host outbound port 2 to Tanium"
-  type              = "egress"
-  from_port         = var.tanium_port_2
-  to_port           = var.tanium_port_2
-  protocol          = "tcp"
-  prefix_list_ids   = local.tanium_prefix[local.environment]
-  security_group_id = local.internal_compute_vpce_security_group_id
+  description              = "S3 Object tagger host outbound port 2 to Tanium"
+  type                     = "egress"
+  from_port                = var.tanium_port_2
+  to_port                  = var.tanium_port_2
+  protocol                 = "tcp"
+  security_group_id        = local.internal_compute_vpce_security_group_id
+  source_security_group_id = data.terraform_remote_state.internal_compute.outputs.tanium_service_endpoint.sg
 }
 
 resource "aws_security_group_rule" "s3_object_tagger_host_inbound_tanium_1" {
-  description       = "S3 Object tagger host inbound port 1 from Tanium"
-  type              = "ingress"
-  from_port         = var.tanium_port_1
-  to_port           = var.tanium_port_1
-  protocol          = "tcp"
-  prefix_list_ids   = local.tanium_prefix[local.environment]
-  security_group_id = local.internal_compute_vpce_security_group_id
+  description              = "S3 Object tagger host inbound port 1 from Tanium"
+  type                     = "ingress"
+  from_port                = var.tanium_port_1
+  to_port                  = var.tanium_port_1
+  protocol                 = "tcp"
+  security_group_id        = data.terraform_remote_state.internal_compute.outputs.tanium_service_endpoint.sg
+  source_security_group_id = local.internal_compute_vpce_security_group_id
 }
 
 resource "aws_security_group_rule" "s3_object_tagger_host_inbound_tanium_2" {
-  description       = "S3 Object tagger host inbound port 2 from Tanium"
-  type              = "ingress"
-  from_port         = var.tanium_port_2
-  to_port           = var.tanium_port_2
-  protocol          = "tcp"
-  prefix_list_ids   = local.tanium_prefix[local.environment]
-  security_group_id = local.internal_compute_vpce_security_group_id
+  description              = "S3 Object tagger host inbound port 2 from Tanium"
+  type                     = "ingress"
+  from_port                = var.tanium_port_2
+  to_port                  = var.tanium_port_2
+  protocol                 = "tcp"
+  security_group_id        = data.terraform_remote_state.internal_compute.outputs.tanium_service_endpoint.sg
+  source_security_group_id = local.internal_compute_vpce_security_group_id
 }
 
 resource "aws_batch_compute_environment" "s3_object_tagger_batch" {
@@ -307,7 +307,7 @@ resource "aws_launch_template" "s3_tagger_ecs_cluster" {
     install_tenable                                  = local.tenable_install[local.environment]
     install_trend                                    = local.trend_install[local.environment]
     install_tanium                                   = local.tanium_install[local.environment]
-    tanium_server_1                                  = local.tanium1
+    tanium_server_1                                  = data.terraform_remote_state.internal_compute.outputs.tanium_service_endpoint.dns
     tanium_server_2                                  = local.tanium2
     tanium_env                                       = local.tanium_env[local.environment]
     tanium_port                                      = var.tanium_port_1
