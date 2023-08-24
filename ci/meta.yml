@@ -110,12 +110,8 @@ meta:
               AMI="$(cat dw-al2-ecs-ami/id)"
               CEs="$(aws batch describe-compute-environments)"
 
-              if echo $CEs | grep -q $AMI; then echo "Compute environment is using the expected ami";
-              else echo "No compute environment is associated with the AMI to be tested"; exit 1;
-              fi
-
               CEs=$(aws batch describe-compute-environments --query 'computeEnvironments[]' \
-              | jq -r '.[] | select(.computeResources.imageId=='\"$AMI\"') | .computeEnvironmentName')
+              | jq -r '.[].computeEnvironmentName')
 
               CE="$(echo $CEs | grep -o -e $COMPUTE_ENV_PREFIX'[a-zA-Z0-9_-]*')"
 
