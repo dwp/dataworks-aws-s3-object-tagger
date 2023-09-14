@@ -1,3 +1,5 @@
+# DO NOT USE THIS REPO - MIGRATED TO GITLAB
+
 # dataworks-aws-s3-object-tagger
 
 ## S3 Object tagger application infrastructure
